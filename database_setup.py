@@ -1,11 +1,17 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Table
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy import create_engine
 
 Base = declarative_base()
+
+# associative table for many to many
+rowerseasons = Table('rowerseasons', Base.metadata,
+                     Column('season_id', String, ForeignKey('seasons.id')),
+                     Column('rower_id', String, ForeignKey('rowers.id'))
+                     )
 
 
 class Seasons(Base):
@@ -15,6 +21,7 @@ class Seasons(Base):
     name = Column(String(30), unique=True, nullable=False)
     short = Column(String(15), unique=True)
     description = Column(String(15))
+    
 
 
 class Regattas(Base):
@@ -39,16 +46,10 @@ class Rowers(Base):
     experience = Column(String(15))
     mother = Column(String(60))
     father = Column(String(60))
+    # Many-to-many relationship
+    seasons = relationship('Seasons', secondary=rowerseasons)
 
 
-class RowerSeasons(Base):
-    __tablename__ = 'rowerseasons'
-
-    id = Column(Integer, primary_key=True)
-    season_id = Column(String, ForeignKey('seasons.id'), nullable=False)
-    rower_id = Column(String, ForeignKey('rowers.id'), nullable=False)
-    season = relationship(Seasons)
-    rower = relationship(Rowers)
 
 
 class Teams(Base):
