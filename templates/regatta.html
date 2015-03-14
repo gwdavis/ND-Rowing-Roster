@@ -1,0 +1,20 @@
+<html>
+<header>
+</header>
+<body>
+<h2>{{regatta.name}}</h2>
+<dl>
+	<dt>Regatta Name:</dt>
+		<dd>{{regatta.name}}</dd>
+	<dt>Date of the event:</dt>
+		<dd>{{regatta.date.strftime('%a, %B %d, %Y')}}</dd>
+	<dt>Link to regatta website:</dt>
+		<dd><a href='http://{{regatta.weblink}}'>{{regatta.weblink}}</a></dd>
+	<dt>Description:</dt>
+		<dd>{{regatta.description}}</dd>
+</dl>
+
+<p><a href='{{url_for('editRegatta', regatta_id=regatta.id)}}'>Edit</a>  <a href='{{url_for('showRegattas')}}'>Cancel</a></p>
+
+</body>
+</html>

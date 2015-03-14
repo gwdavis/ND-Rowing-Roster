@@ -1,0 +1,38 @@
+<html>
+<header>
+</header>
+<body>
+{% if team_id == 'womens' %}
+	<h2>{{season.name}} Roster: Women's Crew</h2>
+{% elif team_id =='mens' %}
+	<h2>{{season.name}} Roster: Men's Crew</h2>
+{% else %}
+	<h2>Houston, we have a problem with the team_id parameter</h2>
+{% endif %}
+
+<p><a href='{{url_for('addRower')}}'>Add Rower</a></p>
+
+<table>
+  <tr>
+    <th>Photo</th>
+    <th>Name</th>
+    <th>Grad Year</th>
+    <th>Experience</th>
+    <th>Mother</th>
+    <th>Father</th>
+  </tr>
+  {% for r in teamroster %}
+  
+  <tr>
+  	<td><img src="{{ url_for('static',
+              filename=r.rower.photo)}}" alt=r.lname height="75"></td>
+    <td><a href='{{url_for('showRower',rower_id=r.id)}}'>{{r.rower.fname}} {{r.rower.lname}}</a></td>
+    <td>{{r.rower.gyear}}</td>
+    <td>{{r.rower.experience}}</td>
+    <td>{{r.rower.mother}}</td>
+    <td>{{r.rower.father}}</td>
+  </tr>
+  {% endfor %}
+</table>
+</body>
+</html>

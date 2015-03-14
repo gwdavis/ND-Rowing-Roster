@@ -1,0 +1,23 @@
+<html>
+<header>
+</header>
+<body>
+<h2>Regattas</h2>
+
+<p><a href='{{url_for('addRegatta')}}'>Add</a></p>
+
+
+<table border="1", style="width:75%">
+<caption> Regattas</caption>
+{% for s in seasons %}
+<tr><td colspan="2" align="center"><strong>{{s.description}}</stong></td></tr>
+{% for r in regattas if r.season_id == s.id %}
+<tr><td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td><td>{{r.date.strftime('%a, %B %d, %Y')}}</td></tr>
+{% endfor %}
+{% endfor %}
+</table>
+
+
+
+</body>
+</html>

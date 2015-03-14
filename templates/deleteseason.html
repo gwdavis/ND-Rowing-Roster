@@ -1,0 +1,24 @@
+<html>
+<header>
+</header>
+<body>
+<h2>DELETE Existing Season: {{season.name}}</h2>
+
+<form action="{{ url_for('deleteSeasonConfirmation', season_id=season.id)}}" method = 'post'>
+<h2>Are you sure you wish to delete this season?  All regatta data associated with this season will be deleted.</h2>
+
+	<dl>
+		<dt>Season Name:</dt>
+			<dd>{{season.name}}</dd>
+		<dt>Short Name:</dt>
+			<dd>{{season.short}}</dd>
+		<dt>Description:</dt>
+			<dd>{{season.description}}</dd>
+	</dl>
+
+	<input type='submit' value='Confirm Delete'>  <a href='{{ url_for('editSeason', season_id=season.id)}}'>Cancel</a>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<html>
+<header>
+</header>
+<body>
+<h2>Registered Seasons</h2>
+
+<p><a href='{{url_for('addSeason')}}'>add</a></p>
+
+
+<table border="1", style="width:75%">
+<caption>Seasons</caption>
+<tr>
+  <th>ID</th>
+  <th>Season Name</th>
+  <th>Short Name</th>
+  <th>Description</th>
+</tr>
+{% for s in seasons %}
+<tr>
+  <td>{{s.id}}</td>
+  <td><a href='{{url_for('editSeason', season_id=s.id)}}'>{{s.name}}</a></td>
+  <td>{{s.short}}</td>
+  <td>{{s.description}}</td>
+</tr>
+{% for r in regattas if r.season_id == s.id %}
+<tr><td>{{r.name}}</td><td>{{r.date}}</td></tr>
+{% endfor %}
+{% endfor %}
+</table>
+
+
+
+</body>
+</html>

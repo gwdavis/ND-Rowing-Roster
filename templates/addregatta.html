@@ -1,0 +1,32 @@
+<html>
+<header>
+</header>
+<body>
+<h2>Register a New Regatta</h2>
+
+<form action="{{ url_for('addRegatta')}}" method = 'post'>
+
+	<dl>
+		<dt>Season:</dt>
+			<dd><select name='season_id'>
+			{%for s in seasons %}
+				<option value={{s.id}}>{{s.name}}</option>
+			{% endfor %}
+				</select></dd>
+			
+		<dt>Regatta Name:</dt>
+			<dd><input type='text' size='60' name='name' placeholder='e.g. Sarasota Invitational'></dd>
+		<dt>Date:</dt>
+			<dd><input type=date name='date' size='12' placeholder='2015-4-12'></dd>
+		<dt>Link to regatta website:</dt>
+			<dd><input type='text' size='60' name='weblink' placeholder='regatta.com'></dd>
+		<dt>Description:</dt>
+			<dd><input size='60' name='description' placeholder='A great regatta for all levels'></textarea></dd>
+	</dl>
+
+	<input type='submit' value='Create'>  <a href='#'>Cancel</a>
+
+</form>
+
+</body>
+</html>

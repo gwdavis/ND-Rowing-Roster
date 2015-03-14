@@ -1,0 +1,56 @@
+<html>
+<header>
+</header>
+<body>
+<h2>Add New Rower Profile</h2>
+
+<form action("{{ url_for('addRower')}}" method = 'POST')>
+
+<table border="1", style="width:75%">
+  
+  <tr>
+  	<td align="center" width="15%" rowspan="9"><img src="{{ url_for('static',
+              filename='1.jpg')}}" alt="Smiley face" width="100%"><input type='file' name='photo' accept="image/*"><br> 300KB or less please</td>
+  <tr>
+    <td>First Name</td><td><input type='text' size='30' name='fname' placeholder='Johnny'></td></tr>
+  <tr>
+    <td>Last Name</td><td><input type='text' size='30' name='lname' placeholder='Awesome'></td></tr>
+  <tr>
+    <td>Graduation Year:</td> <td><input type='text' size='6' name='gyear' placeholder='2030'></td></tr>
+  <tr>
+    <td>Team:</td><td><input type='radio' name='team' value="men"> Men's <input type='radio' name='team' value="women"> Women's</td></tr>
+  
+  <!-- !!! below need to add max(seasons.id) and season.name for the same -->
+  
+  <tr>
+    <td>Register for this Season?:</td><td><input type=checkbox name='rower_seasons' value='s15'> Spring 2015</td></tr>
+  <tr>
+    <td>Seasons of Experience:</td><td><input type='text' size='6' name='experience' placeholder='4'></td></tr>
+  <tr>
+    <td>Mother's name:</td><td><input type='text' size='30' name='mother' placeholder='Cathy'></td></tr>
+  <tr>     
+    <td>Father's name:</td><td><input type='text' size='30' name='father' placeholder='Chris'></td></tr>
+</table>
+
+<br><br>
+
+</table>
+
+<table border="1", style="width:75%">
+<caption> Regattas History (check the appropriate regattas rowed</caption>
+{% for s in seasons %}
+<tr><td colspan="2" align="center"><strong>{{s.description}}</stong></td></tr>
+
+<!-- !!! add below a date restriction so date is less than today's date -->
+
+{% for r in regattas if r.season_id == s.id %}
+<tr><td><input type='checkbox' name='rower_regattas' value='{{r.id}}'> {{r.name}}</td><td>{{r.date}}</td></tr>
+{% endfor %}
+{% endfor %}
+</table>
+<p><input type='submit' value='Submit'>   <a href=#>Cancel</a></p>
+
+</form>
+
+</body>
+</html>

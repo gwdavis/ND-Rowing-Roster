@@ -1,0 +1,24 @@
+<html>
+<header>
+</header>
+<body>
+<h2>Edit Existing Season: {{season.name}}</h2>
+
+<form action="{{ url_for('editSeason', season_id=season.id)}}" method = 'post'>
+
+	<dl>
+		<dt>Season Name:</dt>
+			<dd><input type ='text' size='30' name='name' value='{{season.name}}'></dd>
+		<dt>Short Name:</dt>
+			<dd><input type ='text' size='5' name='short' value='{{season.short}}'></dd>
+		<dt>Description:</dt>
+			<dd><input type ='text' size='30' name='description' value='{{season.description}}'></dd>
+	</dl>
+
+	<input type='submit' value='Submit Changes'> <a href='{{url_for('showSeasons')}}'>Cancel</a>
+	<p><a href='{{url_for('deleteSeasonConfirmation', season_id=season.id)}}'>Delete Season</a></p>
+
+</form>
+
+</body>
+</html>

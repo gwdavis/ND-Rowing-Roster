@@ -1,0 +1,45 @@
+<html>
+<header>
+</header>
+<body>
+<h2>DELETE Rower confirmation: {{rower.fname}} {{rower.lname}}</h2>
+
+<h3> Are you sure you wish to delete this rower and all their associated information? The rower will not show an any previous season rosters or results. Instead you may wish to edit the seasons that the rower crewed.</h3>
+
+<form action("{{ url_for('deleteRowerConfirmation', rower_id=rower.id)}}" method = 'POST')>
+
+<table border="1", style="width:75%">
+  
+  <tr>
+  	<td align="center" width="40%" rowspan="6"><img src="{{ url_for('static',
+              filename=rower.photo)}}" alt="Smiley face" width="100%"></td>
+    <td colspan="2"><strong>{{rower.fname}} {{rower.lname}}</strong></td>
+  <tr>
+    <td>Graduation Year:</td> <td>{{rower.gyear}}</td></tr>
+  <tr>
+    <td>Team for {{currentseason.name}}</td><td>{{currentseason.team_name}}</td></tr>
+  <tr>
+    <td>Seasons of Experience:</td><td>{{rower.experience}}</td></tr>
+  <tr>
+    <td>Mother's name:</td><td>{{rower.mother}}</td></tr>
+  <tr>     
+    <td>Father's name:</td><td>{{rower.father}}</td></tr>
+</table>
+<br><br>
+<table border="1", style="width:75%">
+<caption> Regattas History</caption>
+{% for s in rowerhistoryseasons if s.rowed%}
+<tr><td colspan="2" align="center"><strong>{{s.description}}</stong></td></tr>
+{% for r in rowerhistoryregattas if r.season_id == s.id and r.rowed%}
+<tr><td>{{r.name}}</td><td>{{r.date}}</td></tr>
+{% endfor %}
+{% endfor %}
+</table>
+
+<p><input type='submit' value='Confirm Delete'>   <a href="{{ url_for('showRower', rower_id=rower.id)}}">Cancel</a></p>
+
+</form>
+
+
+</body>
+</html>

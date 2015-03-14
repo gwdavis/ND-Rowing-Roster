@@ -1,0 +1,30 @@
+<html>
+<header>
+</header>
+<body>
+<h2>Roster and Regatta Information: {{season.description}}</h2>
+<h3>Rosters</h3>
+	<ul>
+	<li><a href='{{url_for('showRoster', season_id=season.id, team_id='mens')}}'>Men's Roster</a></li>
+	<li><a href='{{url_for('showRoster', season_id=season.id, team_id='womens')}}'>Women's Roster</a></li>
+	</ul>
+<h3>Regatta Schedule</h3>
+<table>
+  <tr>
+    <th>Regatta</th>
+    <th>Date</th>
+  </tr>
+  {% for r in regattas %}
+  <tr>
+    <td><a href='#'>{{r.name}}</a></td>
+    <td>{{r.date.strftime('%a, %B %d, %Y')}}</td>
+  </tr>
+  {% endfor %}
+</table>
+</body>
+
+<br><br>
+
+<a href='{{url_for('showRegattas')}}'>See all regattas</a>
+</body>
+</html>

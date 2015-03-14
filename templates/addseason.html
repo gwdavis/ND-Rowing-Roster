@@ -1,0 +1,23 @@
+<html>
+<header>
+</header>
+<body>
+<h2>Register a New Season</h2>
+
+<form action="{{ url_for('addSeason')}}" method = 'post'>
+
+	<dl>
+		<dt>Regatta Name:</dt>
+			<dd><input type ='text' size='30' name='name' placeholder='e.g. Winter 2015'></dd>
+		<dt>Short Name:</dt>
+			<dd><input type ='text' size='5' name='short' placeholder='W15'></dd>
+		<dt>Description:</dt>
+			<dd><input type ='text' size='30' name='description' placeholder='Winter 2014-2015'></dd>
+	</dl>
+
+	<input type='submit' value='Create'>
+
+</form>
+
+</body>
+</html>
