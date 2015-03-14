@@ -1,0 +1,12 @@
+
+templates/temp.html
+
+rowingteam.db
+
+rowingteam
+
+*.pyc
+
+database_setup_new.py
+
+database_setup_backup.py
