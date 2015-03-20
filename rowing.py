@@ -1,3 +1,9 @@
+# Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
+# v0.1 adds:   1)Routing
+#                2)Templates and Forms
+#                3)CRUD Functionality
+# March 2015 by Gary Davis
+
 from flask import Flask, render_template, request, redirect, url_for
 # , , , flash
 app = Flask(__name__)

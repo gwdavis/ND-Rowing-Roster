@@ -1,3 +1,10 @@
+# Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
+# v0.1 adds:   1)Routing
+#                2)Templates and Forms
+#                3)CRUD Functionality
+# March 2015 by Gary Davis
+
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Regattas, Seasons, Rowers, Teams, RowerSeasons,\
