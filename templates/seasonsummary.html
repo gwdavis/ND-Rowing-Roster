@@ -22,7 +22,7 @@
   </tr>
   {% for r in regattas %}
   <tr>
-    <td><a href='#'>{{r.name}}</a></td>
+    <td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td>
     <td>{{r.date.strftime('%a, %B %d, %Y')}}</td>
   </tr>
   {% endfor %}
