@@ -21,72 +21,72 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Start fake data
-season = {'id': 1, 'name': 'Spring 2015', 'description': 'Spring of 2015',
-          'short': 's15'}
+# season = {'id': 1, 'name': 'Spring 2015', 'description': 'Spring of 2015',
+#           'short': 's15'}
 
-regattas = [{'id': 1, 'season_id': 1, 'name': "Saratoga Invitational",
-            'date': '2015/4/21', 'weblink': 'google.com/lsdkfsdf'},
-            {'id': 2, 'season_id': 1, 'name': "Greenwich Invitational",
-             'date': '2015/4/21', 'weblink': 'google.com/lsdkwer'},
-            {'id': 3, 'season_id': 1, 'name': "Housatonic Invitational",
-             'date': '2014/4/21', 'weblink': 'google.com/lsdvbn'},
-            {'id': 4, 'season_id': 1, 'name': "Scholastic Nationals",
-             'date': '2014/4/21', 'weblink': 'google.com/lsalkd'}]
+# regattas = [{'id': 1, 'season_id': 1, 'name': "Saratoga Invitational",
+#             'date': '2015/4/21', 'weblink': 'google.com/lsdkfsdf'},
+#             {'id': 2, 'season_id': 1, 'name': "Greenwich Invitational",
+#              'date': '2015/4/21', 'weblink': 'google.com/lsdkwer'},
+#             {'id': 3, 'season_id': 1, 'name': "Housatonic Invitational",
+#              'date': '2014/4/21', 'weblink': 'google.com/lsdvbn'},
+#             {'id': 4, 'season_id': 1, 'name': "Scholastic Nationals",
+#              'date': '2014/4/21', 'weblink': 'google.com/lsalkd'}]
 
-regatta = {'id': 1, 'season_id': 1, 'season_name': 'Spring 2015',
-           'name': "Saratoga Invitational",
-           'date': '2015/4/21', 'description': 'A great regatta',
-           'weblink': 'google.com/lsdkfsdf'}
+# regatta = {'id': 1, 'season_id': 1, 'season_name': 'Spring 2015',
+#            'name': "Saratoga Invitational",
+#            'date': '2015/4/21', 'description': 'A great regatta',
+#            'weblink': 'google.com/lsdkfsdf'}
 
-teamroster = [{'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-               'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-               'mother': 'Jane', 'father': 'Bob'},
-              {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-               'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-               'mother': 'Jane', 'father': 'Bob'},
-              {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-               'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-               'mother': 'Jane', 'father': 'Bob'},
-              {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-               'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-               'mother': 'Jane', 'father': 'Bob'},
-              {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-               'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-               'mother': 'Jane', 'father': 'Bob'}]
+# teamroster = [{'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
+#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
+#                'mother': 'Jane', 'father': 'Bob'},
+#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
+#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
+#                'mother': 'Jane', 'father': 'Bob'},
+#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
+#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
+#                'mother': 'Jane', 'father': 'Bob'},
+#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
+#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
+#                'mother': 'Jane', 'father': 'Bob'},
+#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
+#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
+#                'mother': 'Jane', 'father': 'Bob'}]
 
-rower = {'id': '1', 'photo': '1.jpg', 'team': 'womens', 'fname': 'Susan',
-         'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-         'mother': 'Jane', 'father': 'Bob'}
+# rower = {'id': '1', 'photo': '1.jpg', 'team': 'womens', 'fname': 'Susan',
+#          'lname': 'Latham', 'gyear': '2017', 'experience': '4',
+#          'mother': 'Jane', 'father': 'Bob'}
 
-rowerhistoryseasons = [{'id': '1', 'name': 'Spring 2015', 'description': 'Spring of 2015',
-            'short': 's15', 'rowed': True},
-           {'id': '2', 'name': 'Spring 2014', 'description': 'Spring of 2014',
-            'short': 's14', 'rowed': True},
-           {'id': '3', 'name': 'Spring 2013', 'description': 'Spring of 2013',
-            'short': 's13', 'rowed': False},
-           {'id': '4', 'name': 'Spring 2012', 'description': 'Spring of 2012',
-            'short': 's12', 'rowed': False}]
+# rowerhistoryseasons = [{'id': '1', 'name': 'Spring 2015', 'description': 'Spring of 2015',
+#             'short': 's15', 'rowed': True},
+#            {'id': '2', 'name': 'Spring 2014', 'description': 'Spring of 2014',
+#             'short': 's14', 'rowed': True},
+#            {'id': '3', 'name': 'Spring 2013', 'description': 'Spring of 2013',
+#             'short': 's13', 'rowed': False},
+#            {'id': '4', 'name': 'Spring 2012', 'description': 'Spring of 2012',
+#             'short': 's12', 'rowed': False}]
 
-seasons = [{'id': '1', 'name': 'Spring 2015', 'description': 'Spring of 2015',
-            'short': 's15'},
-           {'id': '2', 'name': 'Spring 2014', 'description': 'Spring of 2014',
-            'short': 's14'},
-           {'id': '3', 'name': 'Spring 2013', 'description': 'Spring of 2013',
-            'short': 's13'},
-           {'id': '4', 'name': 'Spring 2012', 'description': 'Spring of 2012',
-            'short': 's12'}]
+# seasons = [{'id': '1', 'name': 'Spring 2015', 'description': 'Spring of 2015',
+#             'short': 's15'},
+#            {'id': '2', 'name': 'Spring 2014', 'description': 'Spring of 2014',
+#             'short': 's14'},
+#            {'id': '3', 'name': 'Spring 2013', 'description': 'Spring of 2013',
+#             'short': 's13'},
+#            {'id': '4', 'name': 'Spring 2012', 'description': 'Spring of 2012',
+#             'short': 's12'}]
 
-rowerhistoryregattas = [{'id': '1', 'season_id': '1',
-            'name': "Saratoga Invitational",
-            'date': '2015/4/21', 'weblink': 'google.com/lsdkfsdf', 'rowed': True},
-            {'id': '2', 'season_id': '1', 'name': "Greenwich Invitational",
-             'date': '2015/4/21', 'weblink': 'google.com/lsdkwer', 'rowed': False},
-            {'id': '3', 'season_id': '2', 'name': "Housatonic Invitational",
-             'date': '2014/4/21', 'weblink': 'google.com/lsdvbn', 'rowed': True},
-            {'id': '4', 'season_id': '2', 'name': "Scholastic Nationals",
-             'date': '2014/4/21', 'weblink': 'google.com/lsalkd', 'rowed': False}]
+# rowerhistoryregattas = [{'id': '1', 'season_id': '1',
+#             'name': "Saratoga Invitational",
+#             'date': '2015/4/21', 'weblink': 'google.com/lsdkfsdf', 'rowed': True},
+#             {'id': '2', 'season_id': '1', 'name': "Greenwich Invitational",
+#              'date': '2015/4/21', 'weblink': 'google.com/lsdkwer', 'rowed': False},
+#             {'id': '3', 'season_id': '2', 'name': "Housatonic Invitational",
+#              'date': '2014/4/21', 'weblink': 'google.com/lsdvbn', 'rowed': True},
+#             {'id': '4', 'season_id': '2', 'name': "Scholastic Nationals",
+#              'date': '2014/4/21', 'weblink': 'google.com/lsalkd', 'rowed': False}]
 
-currentseason = {'season_id': '1', 'name': 'Spring 2015'}
+currentseason = {'season_id': 1}
 
 # end fake data
 
@@ -111,7 +111,7 @@ def seasonSummary(season_id):
 @app.route('/<season_id>/roster/<team_id>/')
 def showRoster(season_id, team_id):
     season = session.query(Seasons).filter_by(id=season_id).one()
-    teamroster = session.query(RowerTeams).filter_by(team_id=team_id, season_id=season_id)
+    teamroster = session.query(Teams).filter_by(id=team_id).one()
     return render_template('roster.html', team_id=team_id, season=season,
                            teamroster=teamroster)
 
@@ -232,12 +232,19 @@ def deleteRegattaConfirmation(regatta_id):
 @app.route('/rower/<rower_id>/')
 def showRower(rower_id):
     rower = session.query(Rowers).filter_by(id=rower_id).one()
-    rowerhistoryseasons = session.query(RowerSeasons).filter_by(rower_id=rower_id)
-    rowerhistoryregattas = session.query(RowerRegattas).filter_by(rower_id=rower_id)
+#    rowerhistoryseasons = session.query(RowerSeasons).filter_by(rower_id=rower_id)
+#    rowerhistoryregattas = session.query(RowerRegattas).filter_by(rower_id=rower_id)
+    cseason = session.query(Seasons).filter_by(id=currentseason['season_id']).one()
+    currentteam = ['None']
+    for s in rower.season:
+        if s.id == currentseason['season_id']:
+            currentteam = []
+            for t in rower.team:
+                currentteam.append(t.name)
     return render_template('rowerprofile.html', rower=rower,
-                           rowerhistoryseasons=rowerhistoryseasons,
-                           rowerhistoryregattas=rowerhistoryregattas,
-                           currentseason=currentseason)
+ #                          rowerhistoryseasons=rowerhistoryseasons,
+  #                         rowerhistoryregattas=rowerhistoryregattas,
+                           currentseason=cseason, currentteam=currentteam)
 
 # !!! need to pass the current team and season of the rower for cancel button
 @app.route('/rower/<rower_id>/edit/')
