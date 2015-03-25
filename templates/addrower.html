@@ -15,7 +15,7 @@
   
   <tr>
   	<td align="center" width="15%" rowspan="9"><img src="{{ url_for('static',
-              filename='1.jpg')}}" alt="Smiley face" width="100%"><input type='file' name='photo' accept="image/*"><br> 300KB or less please</td>
+              filename='images/avatar_missing_lg.png')}}" alt="Smiley face" width="100%"><input type='file' name='photo' accept="image/*"><br> 300KB or less please<br>Ideal crop ratio: 100:125</td>
   <tr>
     <td>First Name</td><td><input type='text' size='30' name='fname' placeholder='Johnny'></td></tr>
   <tr>
@@ -53,7 +53,7 @@
 {% endfor %}
 {% endfor %}
 </table>
-<p><input type='submit' value='Submit'>   <a href=#>Cancel</a></p>
+<p><input type='submit' value='Submit'>   <a href={{ url_for('mainPage') }}>Cancel</a></p>
 
 </form>
 
