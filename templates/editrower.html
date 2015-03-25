@@ -5,10 +5,9 @@
  March 2015 by Gary Davis -->
 
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 <h2>Edit Rower Profile: {{rower.fname}} {{rower.lname}}</h2>
 
 <form action("{{ url_for('editRower', rower_id=rower.id)}}" method = 'POST' enctype='multipart/form-data')>
@@ -119,5 +118,5 @@
 <p><input type='submit' value='Submit'>   <a href="{{ url_for('showRower', rower_id = rower.id)}}">Cancel</a></p>
 
 </form>
-</body>
-</html>
+
+{% endblock %}

@@ -4,10 +4,10 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
+
 <h2>Edit Regatta Information:  {{regatta.name}}</h2>
 
 <form action="{{ url_for('editRegatta', regatta_id=regatta.id)}}" method = 'post'>
@@ -34,5 +34,4 @@
 
 	<input type='submit' value='Submit Edits'>  <a href='{{ url_for('showRegatta', regatta_id=regatta.id)}}'>Cancel</a>  <a href='{{ url_for('deleteRegattaConfirmation', regatta_id=regatta.id)}}'>DELETE</a>
 
-</body>
-</html>
+{% endblock %}

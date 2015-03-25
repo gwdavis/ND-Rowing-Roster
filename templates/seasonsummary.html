@@ -4,10 +4,9 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
- <html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 <h2>Roster and Regatta Information: {{season.description}}</h2>
 <h3>Rosters</h3>
 	<ul>
@@ -32,5 +31,5 @@
 <br><br>
 
 <a href='{{url_for('showRegattas')}}'>See all regattas</a>
-</body>
-</html>
+
+{% endblock %}

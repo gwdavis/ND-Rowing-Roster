@@ -4,10 +4,9 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 <h2>DELETE Existing Regatta:  {{regatta.name}}</h2>
 
 <h2>Are you sure you wish to delete this regatta?  </h2>
@@ -29,5 +28,4 @@
 
 	<input type='submit' value='Confirm Delete'>  <a href='{{ url_for('showRegatta', regatta_id=regatta.id)}}'>Cancel</a>
 
-</body>
-</html>
+{% endblock %}

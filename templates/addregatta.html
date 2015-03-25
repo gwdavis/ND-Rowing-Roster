@@ -3,10 +3,10 @@
                 2)Templates and Forms
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
-<html>
-<header>
-</header>
-<body>
+
+{% extends "base.html" %}
+{% block content %}
+
 <h2>Register a New Regatta</h2>
 
 <form action="{{ url_for('addRegatta')}}" method = 'post'>
@@ -33,5 +33,4 @@
 
 </form>
 
-</body>
-</html>
+{% endblock%}
