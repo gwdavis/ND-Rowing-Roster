@@ -29,70 +29,6 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Start fake data
-# season = {'id': 1, 'name': 'Spring 2015', 'description': 'Spring of 2015',
-#           'short': 's15'}
-
-# regattas = [{'id': 1, 'season_id': 1, 'name': "Saratoga Invitational",
-#             'date': '2015/4/21', 'weblink': 'google.com/lsdkfsdf'},
-#             {'id': 2, 'season_id': 1, 'name': "Greenwich Invitational",
-#              'date': '2015/4/21', 'weblink': 'google.com/lsdkwer'},
-#             {'id': 3, 'season_id': 1, 'name': "Housatonic Invitational",
-#              'date': '2014/4/21', 'weblink': 'google.com/lsdvbn'},
-#             {'id': 4, 'season_id': 1, 'name': "Scholastic Nationals",
-#              'date': '2014/4/21', 'weblink': 'google.com/lsalkd'}]
-
-# regatta = {'id': 1, 'season_id': 1, 'season_name': 'Spring 2015',
-#            'name': "Saratoga Invitational",
-#            'date': '2015/4/21', 'description': 'A great regatta',
-#            'weblink': 'google.com/lsdkfsdf'}
-
-# teamroster = [{'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-#                'mother': 'Jane', 'father': 'Bob'},
-#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-#                'mother': 'Jane', 'father': 'Bob'},
-#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-#                'mother': 'Jane', 'father': 'Bob'},
-#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-#                'mother': 'Jane', 'father': 'Bob'},
-#               {'id': '1', 'photo': '1.jpg', 'team': 'women', 'fname': 'Susan',
-#                'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-#                'mother': 'Jane', 'father': 'Bob'}]
-
-# rower = {'id': '1', 'photo': '1.jpg', 'team': 'womens', 'fname': 'Susan',
-#          'lname': 'Latham', 'gyear': '2017', 'experience': '4',
-#          'mother': 'Jane', 'father': 'Bob'}
-
-# rowerhistoryseasons = [{'id': '1', 'name': 'Spring 2015', 'description': 'Spring of 2015',
-#             'short': 's15', 'rowed': True},
-#            {'id': '2', 'name': 'Spring 2014', 'description': 'Spring of 2014',
-#             'short': 's14', 'rowed': True},
-#            {'id': '3', 'name': 'Spring 2013', 'description': 'Spring of 2013',
-#             'short': 's13', 'rowed': False},
-#            {'id': '4', 'name': 'Spring 2012', 'description': 'Spring of 2012',
-#             'short': 's12', 'rowed': False}]
-
-# seasons = [{'id': '1', 'name': 'Spring 2015', 'description': 'Spring of 2015',
-#             'short': 's15'},
-#            {'id': '2', 'name': 'Spring 2014', 'description': 'Spring of 2014',
-#             'short': 's14'},
-#            {'id': '3', 'name': 'Spring 2013', 'description': 'Spring of 2013',
-#             'short': 's13'},
-#            {'id': '4', 'name': 'Spring 2012', 'description': 'Spring of 2012',
-#             'short': 's12'}]
-
-# rowerhistoryregattas = [{'id': '1', 'season_id': '1',
-#             'name': "Saratoga Invitational",
-#             'date': '2015/4/21', 'weblink': 'google.com/lsdkfsdf', 'rowed': True},
-#             {'id': '2', 'season_id': '1', 'name': "Greenwich Invitational",
-#              'date': '2015/4/21', 'weblink': 'google.com/lsdkwer', 'rowed': False},
-#             {'id': '3', 'season_id': '2', 'name': "Housatonic Invitational",
-#              'date': '2014/4/21', 'weblink': 'google.com/lsdvbn', 'rowed': True},
-#             {'id': '4', 'season_id': '2', 'name': "Scholastic Nationals",
-#              'date': '2014/4/21', 'weblink': 'google.com/lsalkd', 'rowed': False}]
 
 currentseason = {'season_id': 1}
 
@@ -217,7 +153,7 @@ def addRegatta():
 
 @app.route('/regatta/<regatta_id>/edit/', methods=['GET', 'POST'])
 def editRegatta(regatta_id):
-    #seasons = session.query(Seasons)
+    seasons = session.query(Seasons)
     eRegatta = session.query(Regattas).filter_by(id=regatta_id).one()
    
     if request.method == 'POST':
@@ -271,6 +207,7 @@ def showRower(rower_id):
                 print t.name, t.id
     return render_template('rowerprofile.html', rower=rower,
                            currentseason=cseason, currentteam=currentteam)
+
 
 # !!! need to pass the current team and season of the rower for cancel button
 @app.route('/rower/<rower_id>/edit/', methods=['GET', 'POST'])
