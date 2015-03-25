@@ -108,23 +108,18 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-# checks if uploaded files have an acceptable extension
+# checks if uploaded photo files have an acceptable extension
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-
-
-
 # Temporary manual plug to select the applicable season
 currentseason = {'season_id': 1}
 
-
+# This will be another page so for the time being we will redirect
 @app.route('/')
 def mainPage():
-    
-    
     return redirect(url_for('seasonSummary',
                             season_id=currentseason['season_id']))
 
@@ -261,19 +256,20 @@ def deleteRegattaConfirmation(regatta_id):
 
 @app.route('/rower/<rower_id>/')
 def showRower(rower_id):
-    rower = session.query(Rowers).filter_by(id=rower_id).one()
-#    rowerhistoryseasons = session.query(RowerSeasons).filter_by(rower_id=rower_id)
-#    rowerhistoryregattas = session.query(RowerRegattas).filter_by(rower_id=rower_id)
-    cseason = session.query(Seasons).filter_by(id=currentseason['season_id']).one()
+    rower = session.query(Rowers).get(rower_id)
+    cseason = session.query(Seasons).get(currentseason['season_id'])
+    # While we will be using only one team below accomodates a rower belonging
+    # to more than one team
     currentteam = ['None']
     for s in rower.season:
         if s.id == currentseason['season_id']:
+            # !!! got error rower.team was not iterable when I tried
+            # [dict(row) for row in rower.team]
             currentteam = []
             for t in rower.team:
-                currentteam.append(t.name)
+                currentteam.append({'id': t.id, 'name': t.name})
+                print t.name, t.id
     return render_template('rowerprofile.html', rower=rower,
- #                          rowerhistoryseasons=rowerhistoryseasons,
-  #                         rowerhistoryregattas=rowerhistoryregattas,
                            currentseason=cseason, currentteam=currentteam)
 
 # !!! need to pass the current team and season of the rower for cancel button
@@ -283,24 +279,22 @@ def editRower(rower_id):
     regattas = session.query(Regattas)
     rower = session.query(Rowers).filter_by(id=rower_id).one()
     cseason = session.query(Seasons).filter_by(id=currentseason['season_id']).one()
-# Identify current team or teams    
+    # Identify current team or teams 
     currentteam = ['None']
     for s in rower.season:
         if s.id == currentseason['season_id']:
             currentteam = []
             for t in rower.team:
                 currentteam.append(t.id)
-# Identify what regattas have been rowed
+    # Identify what regattas have been rowed
     rowedregattas = []
     for rr in rower.regatta:
         rowedregattas.append(rr.id)
-#    print rowedregattas
-#    rowerhistoryseasons = session.query(RowerSeasons).filter_by(rower_id=rower_id)
- #   rowerhistoryregattas = session.query(RowerRegattas)
+
     # !!! NEED TO CLEAN UP THIS IF STATEMENT
-    # !!! 1) add photo, current season register, team and regattas
-    # !!! 2) do we need the commented if statement below
-    # !!! 3) there seems to be a ton of html calls for regattas... not sure
+    # !!! 1) fix current season register and regattas
+    # !!! 2) do we need the commented if statements below
+    # !!! 3) We we really need to get all the data from the form every time?
     if request.method == 'POST':
 
             photofile = request.files['photo']
@@ -368,8 +362,6 @@ def editRower(rower_id):
             return redirect(url_for('showRower', rower_id=rower.id))
     else:
         return render_template('editrower.html', rower=rower,
- #                          rowerhistoryseasons=rowerhistoryseasons,
- #                          rowerhistoryregattas=rowerhistoryregattas,
                            rowedregattas=rowedregattas,
                            seasons=seasons, 
                            regattas=regattas,
