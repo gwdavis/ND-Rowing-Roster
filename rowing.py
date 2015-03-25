@@ -8,11 +8,19 @@ from flask import Flask, render_template, request, redirect, url_for
 # , , , flash
 app = Flask(__name__)
 
+import os
+import sys
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Regattas, Seasons, Rowers, Teams, RowerSeasons,\
                            RowerRegattas, RowerTeams, Base
 import datetime, time
+# Below used to verify no code is injected in uploaded filenames
+from werkzeug import secure_filename
+
+
+
+
 
 engine = create_engine('sqlite:///rowingteam.db')
 Base.metadata.bind = engine
@@ -89,6 +97,28 @@ session = DBSession()
 currentseason = {'season_id': 1}
 
 # end fake data
+
+# Set up for Flask receipt of files from HTML form
+# see http://flask.pocoo.org/docs/0.10/patterns/fileuploads/#uploading-files
+# !!! generalize the UPLOAD_FOLDER http://www.karoltomala.com/blog/?p=622
+path = os.path.abspath(__file__)
+dir_path = os.path.dirname(path)
+UPLOAD_FOLDER = dir_path + '/static/images'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+# checks if uploaded files have an acceptable extension
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+
+
+
+# Temporary manual plug to select the applicable season
+currentseason = {'season_id': 1}
 
 
 @app.route('/')
@@ -247,26 +277,110 @@ def showRower(rower_id):
                            currentseason=cseason, currentteam=currentteam)
 
 # !!! need to pass the current team and season of the rower for cancel button
-@app.route('/rower/<rower_id>/edit/')
+@app.route('/rower/<rower_id>/edit/', methods=['GET', 'POST'])
 def editRower(rower_id):
     seasons = session.query(Seasons)
     regattas = session.query(Regattas)
     rower = session.query(Rowers).filter_by(id=rower_id).one()
-    rowerhistoryseasons = session.query(RowerSeasons).filter_by(rower_id=rower_id)
-    rowerhistoryregattas = session.query(RowerRegattas)
-    if False:
-        pass
+    cseason = session.query(Seasons).filter_by(id=currentseason['season_id']).one()
+# Identify current team or teams    
+    currentteam = ['None']
+    for s in rower.season:
+        if s.id == currentseason['season_id']:
+            currentteam = []
+            for t in rower.team:
+                currentteam.append(t.id)
+# Identify what regattas have been rowed
+    rowedregattas = []
+    for rr in rower.regatta:
+        rowedregattas.append(rr.id)
+#    print rowedregattas
+#    rowerhistoryseasons = session.query(RowerSeasons).filter_by(rower_id=rower_id)
+ #   rowerhistoryregattas = session.query(RowerRegattas)
+    # !!! NEED TO CLEAN UP THIS IF STATEMENT
+    # !!! 1) add photo, current season register, team and regattas
+    # !!! 2) do we need the commented if statement below
+    # !!! 3) there seems to be a ton of html calls for regattas... not sure
+    if request.method == 'POST':
+
+            photofile = request.files['photo']
+            if photofile and allowed_file(photofile.filename):
+                filename = secure_filename(photofile.filename)
+                photofile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                rower.photo = filename
+                print 'current photo is %s' % rower.photo
+            else:
+                print 'no file I guess'    
+        #        rower.photo = request.form['photo']
+        # if request.form['fname']:
+            rower.fname = request.form['fname']
+#         if request.form['lname']:
+            rower.lname = request.form['lname']
+#         if request.form['gyear']:
+            rower.gyear = request.form['gyear']
+
+            # Update Team - because the db model allows more than one team
+            # that will be implemented at a later date, we remove all the
+            # current teams (there should only be one) and append the new team
+            # !!! Do we need an if request.form to avoid doing this on all submits
+            t = session.query(Teams).filter_by(id=request.form['team']).one()
+            for ct in rower.team:
+                rower.team.remove(ct)
+            rower.team.append(t)
+
+            # Update current season status
+            # !!! Houston!!!   we cannot get a '1' returned here.
+            if request.form['rower_seasons'][0] == 0:
+                print request.form['rower_seasons'][0]
+                print 'not this season'
+                pass
+            else:
+                print request.form['rower_seasons'][0]
+                print 'we have a season'
+                # ss = session.query(Seasons).get(request.form['rower_seasons'])
+                # rower.season.append(ss)
+
+#         if request.form['experience']:
+            rower.experience = request.form['experience']
+#         if request.form['mother']:
+            rower.mother = request.form['mother']
+#         if request.form['father']:
+            rower.father = request.form['father']
+
+            # Update regattas rowed
+            # great reference for 'getlist' http://stackoverflow.com/questions/
+            #       7996075/iterate-through-checkboxes-in-flask
+            # !!! with square brackets I get an error:
+            # TypeError: 'instancemethod' object has no attribute '__getitem__'
+            # !!! for rr in rower.regatta, we are only picking up every other
+            # regatta yet same for loop works on line 265
+            new_rowed_regattas = request.form.getlist('rower_regattas')
+            for rr in rower.regatta:
+                print 'remove %s' % rr.name
+                rower.regatta.remove(rr)
+            for nr in new_rowed_regattas:
+                new = session.query(Regattas).get(nr)
+                rower.regatta.append(new)
+            print new_rowed_regattas
+
+            session.add(rower)
+            session.commit()
+            return redirect(url_for('showRower', rower_id=rower.id))
     else:
         return render_template('editrower.html', rower=rower,
-                           rowerhistoryseasons=rowerhistoryseasons,
-                           rowerhistoryregattas=rowerhistoryregattas,
+ #                          rowerhistoryseasons=rowerhistoryseasons,
+ #                          rowerhistoryregattas=rowerhistoryregattas,
+                           rowedregattas=rowedregattas,
                            seasons=seasons, 
                            regattas=regattas,
-                           currentseason=currentseason)
+                           currentseason=cseason,
+                           currentteam=currentteam)
 
 
 @app.route('/rower/new/')
 def addRower():
+    seasons = session.query(Seasons)
+    regattas = session.query(Regattas)
     return render_template('addrower.html', seasons=seasons, regattas=regattas)
 
 
