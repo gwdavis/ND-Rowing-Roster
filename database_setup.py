@@ -53,6 +53,7 @@ class Regattas(Base):
     description = Column(String(250))
     weblink = Column(String(250))
     rower = relationship('Rowers', secondary='rowerregattas')
+    season = relationship('Seasons')
 
 
 class Rowers(Base):
