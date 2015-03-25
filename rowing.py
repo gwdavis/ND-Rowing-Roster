@@ -53,6 +53,37 @@ def allowed_file(filename):
 # Temporary manual plug to select the applicable season
 currentseason = {'season_id': 1}
 
+def currentteam(rower_id, season_id):
+    '''Returns the teams where the rower is a member for a 
+    particular season.
+
+    arguements: rower_id - the id of the rower
+                season_id - the id of the season_id
+
+    returns:    A list of dictionaries for each team with, an
+                id for the team and a name
+    '''
+    current_team = ['None']
+    rower = session.query(Rowers).get(rower_id)
+    for s in rower.season:
+        if s.id == currentseason['season_id']:
+            # !!! got error rower.team was not iterable when I tried
+            # [dict(row) for row in rower.team]
+            current_team = []
+            for t in rower.team:
+                current_team.append({'id': t.id, 'name': t.name})
+                print t.name, t.id
+    return current_team
+
+
+def rowedregattas(rower_id):
+    # Identify what regattas have been rowed and return ids
+    rower = session.query(Rowers).get(rower_id)
+    rowedregattas = []
+    for rr in rower.regatta:
+        rowedregattas.append(rr.id)
+    return rowedregattas
+
 # This will be another page so for the time being we will redirect
 @app.route('/')
 def mainPage():
@@ -194,19 +225,9 @@ def deleteRegattaConfirmation(regatta_id):
 def showRower(rower_id):
     rower = session.query(Rowers).get(rower_id)
     cseason = session.query(Seasons).get(currentseason['season_id'])
-    # While we will be using only one team below accomodates a rower belonging
-    # to more than one team
-    currentteam = ['None']
-    for s in rower.season:
-        if s.id == currentseason['season_id']:
-            # !!! got error rower.team was not iterable when I tried
-            # [dict(row) for row in rower.team]
-            currentteam = []
-            for t in rower.team:
-                currentteam.append({'id': t.id, 'name': t.name})
-                print t.name, t.id
+    current_team = currentteam(rower_id=rower_id, season_id=cseason.id)
     return render_template('rowerprofile.html', rower=rower,
-                           currentseason=cseason, currentteam=currentteam)
+                           currentseason=cseason, currentteam=current_team)
 
 
 # !!! need to pass the current team and season of the rower for cancel button
@@ -214,19 +235,11 @@ def showRower(rower_id):
 def editRower(rower_id):
     seasons = session.query(Seasons)
     regattas = session.query(Regattas)
-    rower = session.query(Rowers).filter_by(id=rower_id).one()
-    cseason = session.query(Seasons).filter_by(id=currentseason['season_id']).one()
-    # Identify current team or teams 
-    currentteam = ['None']
-    for s in rower.season:
-        if s.id == currentseason['season_id']:
-            currentteam = []
-            for t in rower.team:
-                currentteam.append(t.id)
-    # Identify what regattas have been rowed
-    rowedregattas = []
-    for rr in rower.regatta:
-        rowedregattas.append(rr.id)
+    rower = session.query(Rowers).get(id=rower_id)
+    cseason = session.query(Seasons).get(id=currentseason['season_id'])
+    current_team = currentteam(rower_id=rower_id, season_id=cseason.id)
+    # Didn't want a loop in the html template so have the following function:
+    rowed_regattas = rowedregattas(rower_id=rower_id)
 
     # !!! NEED TO CLEAN UP THIS IF STATEMENT
     # !!! 1) fix current season register and regattas
@@ -239,10 +252,7 @@ def editRower(rower_id):
                 filename = secure_filename(photofile.filename)
                 photofile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 rower.photo = filename
-                print 'current photo is %s' % rower.photo
-            else:
-                print 'no file I guess'    
-        #        rower.photo = request.form['photo']
+               
         # if request.form['fname']:
             rower.fname = request.form['fname']
 #         if request.form['lname']:
@@ -281,8 +291,6 @@ def editRower(rower_id):
             # Update regattas rowed
             # great reference for 'getlist' http://stackoverflow.com/questions/
             #       7996075/iterate-through-checkboxes-in-flask
-            # !!! with square brackets I get an error:
-            # TypeError: 'instancemethod' object has no attribute '__getitem__'
             # !!! for rr in rower.regatta, we are only picking up every other
             # regatta yet same for loop works on line 265
             new_rowed_regattas = request.form.getlist('rower_regattas')
@@ -299,26 +307,39 @@ def editRower(rower_id):
             return redirect(url_for('showRower', rower_id=rower.id))
     else:
         return render_template('editrower.html', rower=rower,
-                           rowedregattas=rowedregattas,
-                           seasons=seasons, 
-                           regattas=regattas,
-                           currentseason=cseason,
-                           currentteam=currentteam)
+                               rowedregattas=rowed_regattas,
+                               seasons=seasons,
+                               regattas=regattas,
+                               currentseason=cseason,
+                               currentteam=current_team)
 
 
-@app.route('/rower/new/')
+@app.route('/rower/new/', methods=['GET', 'POST'])
 def addRower():
+    # !!! need to fill out once done with edit....
     seasons = session.query(Seasons)
     regattas = session.query(Regattas)
+    if request.method == 'POST':
+        pass
+    else:
+        pass
     return render_template('addrower.html', seasons=seasons, regattas=regattas)
 
 
-@app.route('/rower/<rower_id>/delete/')
+@app.route('/rower/<rower_id>/delete/', methods=['GET', 'POST'])
 def deleteRowerConfirmation(rower_id):
-    return render_template('deleterower.html', rower=rower,
-                           rowerhistoryseasons=rowerhistoryseasons,
-                           rowerhistoryregattas=rowerhistoryregattas,
-                           currentseason=currentseason)
+    deleteRower = session.query(Rowers).get(rower_id)
+    cseason = session.query(Seasons).get(currentseason['season_id'])
+    current_team = currentteam(rower_id=rower_id, season_id=cseason.id)
+
+    if request.method == 'POST':
+        session.delete(deleteRower)
+        session.commit()
+        return redirect(url_for('showRoster', team_id=current_team['id'],
+                                season_id=cseason.id))
+    else:
+        return render_template('deleterower.html', rower=deleteRower,
+                               currentseason=cseason, currentteam=current_team)
 
 
 if __name__ == '__main__':

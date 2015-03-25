@@ -115,7 +115,9 @@
     {% endfor %}
     {% endfor %}
 </table>
-<p><input type='submit' value='Submit'>   <a href="{{ url_for('showRower', rower_id = rower.id)}}">Cancel</a></p>
+<p><input type='submit' value='Submit'>   <a href="{{ url_for('showRower', rower_id = rower.id)}}">Cancel</a>
+<a href="{{ url_for('deleteRowerConfirmation', rower_id = rower.id)}}">DELETE</a>
+</p>
 
 </form>
 
