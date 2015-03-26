@@ -19,9 +19,6 @@ import datetime, time
 from werkzeug import secure_filename
 
 
-
-
-
 engine = create_engine('sqlite:///rowingteam.db')
 Base.metadata.bind = engine
 
@@ -36,7 +33,8 @@ currentseason = {'season_id': 1}
 
 # Set up for Flask receipt of files from HTML form
 # see http://flask.pocoo.org/docs/0.10/patterns/fileuploads/#uploading-files
-# !!! generalize the UPLOAD_FOLDER http://www.karoltomala.com/blog/?p=622
+# see generalized path (i.e. dir_path) using module __file__ directory at:
+# http://www.karoltomala.com/blog/?p=622
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 UPLOAD_FOLDER = dir_path + '/static/images'
@@ -50,14 +48,17 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-# Temporary manual plug to select the applicable season
+# Temporary manual plug to select the applicable season.
+# A later version will allow the selection of the season to display
+# teams, regattas and possibly results.
 currentseason = {'season_id': 1}
 
+
 def currentteam(rower_id, season_id):
-    '''Returns the teams where the rower is a member for a 
+    '''Returns the teams where the rower is a member for a
     particular season.
 
-    arguements: rower_id - the id of the rower
+    arguments: rower_id - the id of the rower
                 season_id - the id of the season_id
 
     returns:    A list of dictionaries for each team with, an
@@ -67,8 +68,8 @@ def currentteam(rower_id, season_id):
     rower = session.query(Rowers).get(rower_id)
     for s in rower.season:
         if s.id == currentseason['season_id']:
-            # !!! got error rower.team was not iterable when I tried
-            # [dict(row) for row in rower.team]
+            # !!! got error: "rower.team was not iterable" when I tried
+            # to use alternative code:  [dict(row) for row in rower.team]
             current_team = []
             for t in rower.team:
                 current_team.append({'id': t.id, 'name': t.name})
@@ -77,12 +78,19 @@ def currentteam(rower_id, season_id):
 
 
 def rowedregattas(rower_id):
-    # Identify what regattas have been rowed and return ids
+    '''Identify what regattas have been rowed by a rower
+    and return regatta ids.
+
+    argument:   rower_id
+
+    return:     list of regatta ids
+    '''
     rower = session.query(Rowers).get(rower_id)
     rowedregattas = []
     for rr in rower.regatta:
         rowedregattas.append(rr.id)
     return rowedregattas
+
 
 # This will be another page so for the time being we will redirect
 @app.route('/')
@@ -94,6 +102,11 @@ def mainPage():
 # Show current season regattas and links to rosters
 @app.route('/<season_id>/')
 def seasonSummary(season_id):
+    '''Display html page showing a team summary with links to rosters
+    and display of regattas for the current season.
+
+    argument:   season id
+    '''
     season = session.query(Seasons).filter_by(id=season_id).one()
     regattas = session.query(Regattas).filter_by(season_id=season_id)
     return render_template('seasonsummary.html', season=season,
@@ -102,6 +115,10 @@ def seasonSummary(season_id):
 
 @app.route('/<season_id>/roster/<team_id>/')
 def showRoster(season_id, team_id):
+    '''Display html page showing roster for a target team and season.
+
+    argument:   season id and team id
+    '''
     season = session.query(Seasons).filter_by(id=season_id).one()
     teamroster = session.query(Teams).filter_by(id=team_id).one()
     return render_template('roster.html', team_id=team_id, season=season,
@@ -110,12 +127,16 @@ def showRoster(season_id, team_id):
 
 @app.route('/seasons/')
 def showSeasons():
+    '''Display html dashboard page showing a list of registered seasons.
+    '''
     seasons = session.query(Seasons)
     return render_template('seasons.html', seasons=seasons)
 
 
 @app.route('/season/new/', methods=['GET', 'POST'])
 def addSeason():
+    '''Display html dashboard page to register a new season.
+    '''
     if request.method == 'POST':
         newSeason = Seasons(name=request.form['name'],
                             short=request.form['short'],
@@ -129,6 +150,10 @@ def addSeason():
 
 @app.route('/season/<season_id>/edit/', methods=['GET', 'POST'])
 def editSeason(season_id):
+    '''Display html dashboard page to edit an already registered season
+
+    Argument:   season id
+    '''
     eSeason = session.query(Seasons).filter_by(id=season_id).one()
     if request.method == 'POST':
         eSeason.name = request.form['name']
@@ -143,6 +168,12 @@ def editSeason(season_id):
 
 @app.route('/season/<season_id>/delete/', methods=['GET', 'POST'])
 def deleteSeasonConfirmation(season_id):
+    '''Display html dashboard sub-page confirming deletion an existing
+    season. Care must be taken as that will orphan regattas and remove
+    rowers from teams from that particular season.
+
+    argument:   season_id
+    '''
     deleteSeason = session.query(Seasons).filter_by(id=season_id).one()
     if request.method == 'POST':
         session.delete(deleteSeason)
@@ -154,6 +185,8 @@ def deleteSeasonConfirmation(season_id):
 
 @app.route('/regattas/')
 def showRegattas():
+    '''Display html page showing regattas for all registered seasons 
+    '''
     seasons = session.query(Seasons)
     regattas = session.query(Regattas)
     return render_template('regattas.html', seasons=seasons, regattas=regattas)
@@ -161,12 +194,18 @@ def showRegattas():
 
 @app.route('/regatta/<regatta_id>/')
 def showRegatta(regatta_id):
+    '''Display html page showing detailed regatta information.
+
+    argument: regatta id
+    '''
     regatta = session.query(Regattas).filter_by(id=regatta_id).one()
     return render_template('regatta.html', regatta=regatta)
 
 
 @app.route('/regatta/new/', methods=['GET', 'POST'])
 def addRegatta():
+    '''Display html dashboard page to add a new regatta.
+    '''
     seasons = session.query(Seasons)
     if request.method == 'POST':
         newRegatta = Regattas(name=request.form['name'],
@@ -184,9 +223,12 @@ def addRegatta():
 
 @app.route('/regatta/<regatta_id>/edit/', methods=['GET', 'POST'])
 def editRegatta(regatta_id):
+    '''Display html dashboard page to edit an existing regatta.
+
+    argument:   regatta id
+    '''
     seasons = session.query(Seasons)
     eRegatta = session.query(Regattas).filter_by(id=regatta_id).one()
-   
     if request.method == 'POST':
         if request.form['name']:
             eRegatta.name = request.form['name']
@@ -194,14 +236,13 @@ def editRegatta(regatta_id):
             # Sqlite apparently outputs strings for date fields
             # so need to convert to Python datetime for datebase type
             eRegatta.date = datetime.datetime.strptime(
-                             request.form['date'], '%Y-%m-%d')         
+                             request.form['date'], '%Y-%m-%d')      
         if request.form['season_id']:
             eRegatta.season_id = request.form['season_id']
         if request.form['weblink']:
             eRegatta.weblink = request.form['weblink']
         if request.form['description']:
             eRegatta.description = request.form['description']
-      
         session.add(eRegatta)
         session.commit()
         return redirect(url_for('showRegattas'))
@@ -212,6 +253,12 @@ def editRegatta(regatta_id):
 
 @app.route('/regatta/<regatta_id>/delete/', methods=['GET', 'POST'])
 def deleteRegattaConfirmation(regatta_id):
+    '''Display html dashboard sub-page to confirm deletion an existing
+    regatta.  Use care as deleting a regatta will remove that regatta
+    form list of regatta's rowed for each rower.
+
+    argument regatta id
+    '''
     deleteRegatta = session.query(Regattas).filter_by(id=regatta_id).one()
     if request.method == 'POST':
         session.delete(deleteRegatta)
@@ -223,6 +270,10 @@ def deleteRegattaConfirmation(regatta_id):
 
 @app.route('/rower/<rower_id>/')
 def showRower(rower_id):
+    '''Display detailed rower information.
+
+    argument rower id
+    '''
     rower = session.query(Rowers).get(rower_id)
     cseason = session.query(Seasons).get(currentseason['season_id'])
     current_team = currentteam(rower_id=rower_id, season_id=cseason.id)
@@ -230,13 +281,16 @@ def showRower(rower_id):
                            currentseason=cseason, currentteam=current_team)
 
 
-# !!! need to pass the current team and season of the rower for cancel button
 @app.route('/rower/<rower_id>/edit/', methods=['GET', 'POST'])
 def editRower(rower_id):
+    '''Display html dashboard page to edit an existing rower.
+
+    argument: rower id
+    '''
     seasons = session.query(Seasons)
     regattas = session.query(Regattas)
-    rower = session.query(Rowers).get(id=rower_id)
-    cseason = session.query(Seasons).get(id=currentseason['season_id'])
+    rower = session.query(Rowers).get(rower_id)
+    cseason = session.query(Seasons).get(currentseason['season_id'])
     current_team = currentteam(rower_id=rower_id, season_id=cseason.id)
     # Didn't want a loop in the html template so have the following function:
     rowed_regattas = rowedregattas(rower_id=rower_id)
@@ -316,6 +370,8 @@ def editRower(rower_id):
 
 @app.route('/rower/new/', methods=['GET', 'POST'])
 def addRower():
+    '''Display html dashboard page to add a new rower
+    '''
     # !!! need to fill out once done with edit....
     seasons = session.query(Seasons)
     regattas = session.query(Regattas)
@@ -328,6 +384,10 @@ def addRower():
 
 @app.route('/rower/<rower_id>/delete/', methods=['GET', 'POST'])
 def deleteRowerConfirmation(rower_id):
+    '''Display html dashboard sub-page confirming deletion of a rower.
+
+    argument:   rower id
+    '''
     deleteRower = session.query(Rowers).get(rower_id)
     cseason = session.query(Seasons).get(currentseason['season_id'])
     current_team = currentteam(rower_id=rower_id, season_id=cseason.id)
