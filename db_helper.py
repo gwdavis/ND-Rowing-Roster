@@ -214,6 +214,8 @@ def add_new_rower(form, files, image_folder):
                        mother=form['mother'],
                        father=form['father'],
                        )
+    if '1' in form.getlist('rower_seasons'):
+        add_season_to_rower(new_rower, get_current_season().id)
 
 
 def update_team_for_rower(rower, team_id):
@@ -223,12 +225,31 @@ def update_team_for_rower(rower, team_id):
     rower.team.append(team)
     return
 
+def add_season_to_rower(rower, season_id):
+    """Adds a season reference object to a rower object
+    args:   rower object
+            season ID"""
+    for season in rower.season:
+        if season.id == season_id:
+            return
+
+    rower.season.append(get_season_from_season_id(season_id))
+    return
+
+
+def remove_season_from_rower(rower, season_id):
+    """Removes a season reference object from a rower object
+    args:   rower object
+            season ID"""
+    for season in rower.season:
+        if season.id == season_id:
+            rower.season.remove(season)
+    return
 
 def update_rower(rower_id, form, files, image_folder):
-    # !!! NEED TO CLEAN UP THIS IF STATEMENT
     # !!! 1) fix current season register and regattas
     # !!! 3) We we really need to get all the data from the form every time?
-    """Remove a rower from the DB."""
+    """Update fields for a rower already in the DB."""
     rower = get_rower_from_rower_id(rower_id)
     rower.photo = get_avatar(rower, files, image_folder)
     rower.fname = form['fname']
@@ -237,20 +258,12 @@ def update_rower(rower_id, form, files, image_folder):
     rower.experience = form['experience']
     rower.mother = form['mother']
     rower.father = form['father']
-    # rower.team.append(get_team_from_team_id(form['team']))
     update_team_for_rower(rower, form['team'])
     # Update current season status
-    # !!! Houston!!!   we cannot get a '1' returned here.
-    if form['rower_seasons'] == 0:
-        print form['rower_seasons']
-        print 'not this season'
-        pass
+    if '1' in form.getlist('rower_seasons'):
+        add_season_to_rower(rower, get_current_season().id)
     else:
-        print form['rower_seasons']
-        print 'we have a season'
-        # ss = session.query(Seasons).get(request.form['rower_seasons'])
-        # rower.season.append(ss)
-    
+        remove_season_from_rower(rower, get_current_season().id)
     # Update regattas rowed
     # great reference for 'getlist' http://stackoverflow.com/questions/
     #       7996075/iterate-through-checkboxes-in-flask

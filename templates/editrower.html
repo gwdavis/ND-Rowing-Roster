@@ -12,10 +12,10 @@
 
 <form action("{{ url_for('editRower', rower_id=rower.id)}}" method = 'POST' enctype='multipart/form-data')>
 
-<table border="1", style="width:75%">
+<table border="0", style="width:75%">
   
     <tr>
-    	<td align="center" width="40%" rowspan="9">
+      <td align="center" width="40%" rowspan="12">
             <img src="{{ url_for('static', filename='images/' + rower.photo)}}" 
                 alt="Smiley face" width="100%">
             <input type='file' name='photo' accept="image/*"><br> 
@@ -23,7 +23,7 @@
         </td>
     <tr>
         <td>
-            First Name
+            First Name:
         </td>
         <td>
             <input type='text' size='30' name='fname' value='{{rower.fname}}'>
@@ -31,7 +31,7 @@
     </tr>
     <tr>
         <td>
-            Last Name
+            Last Name:
         </td>
         <td>
             <input type='text' size='30' name='lname' value='{{rower.lname}}'>
@@ -56,18 +56,16 @@
             Women's
         </td>
     </tr>
-
-    <!-- !!! below need to add max(seasons.id) and season.name for the same -->
-
     <tr>
         <td>Register for this Season?:</td>
             <td>
-                <input type='hidden' name='rower_seasons' value=3/> 
-                <input type='checkbox' name='rower_seasons' value=7 
-                    {% for s in rower.season %}{%if s.id == currentseason.id %} checked 
-                    {% endif %}{% endfor %} /> 
-                {{currentseason.name}}
-            </td></tr>
+                <input type='hidden' name='rower_seasons' value='0' />
+                <label><input type='checkbox' name='rower_seasons' value='1'
+                   {% for s in rower.season %}{%if s.id == currentseason.id %} checked 
+                   {% endif %}{% endfor %} />
+                {{currentseason.name}}</label>
+            </td>
+    </tr>
     <tr>
     <td>Seasons of Experience:</td><td><input type='text' size='6' name='experience' value='{{rower.experience}}'></td></tr>
     <tr>
@@ -86,13 +84,14 @@
             <input type='text' size='30' name='father' value='{{rower.father}}'>
         </td>
     </tr>
+    <tr><td></td></tr>
 </table>
 
 <br><br>
 
 </table>
 
-<table border="1", style="width:75%">
+<table border="1", style="width:50%">
     <caption> Regattas History (check the appropriate regattas rowed)</caption>
     {% for s in seasons %}
     <tr>
