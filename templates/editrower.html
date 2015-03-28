@@ -50,9 +50,9 @@
             Team:
         </td>
         <td>
-            <input type='radio' name='team' value="mens" {% if currentteam[0] == 'mens'%} checked {% endif %}>
+            <input type='radio' name='team' value="mens" {% if currentteam.id == 'mens'%} checked {% endif %}>
             Men's 
-            <input type='radio' name='team' value="womens" {% if currentteam[0] == 'womens' %} checked {% endif %}> 
+            <input type='radio' name='team' value="womens" {% if currentteam.id == 'womens' %} checked {% endif %}> 
             Women's
         </td>
     </tr>
@@ -62,8 +62,8 @@
     <tr>
         <td>Register for this Season?:</td>
             <td>
-                <input type='hidden' name='rower_seasons' value=0/> 
-                <input type='checkbox' name='rower_seasons' value=1 
+                <input type='hidden' name='rower_seasons' value=3/> 
+                <input type='checkbox' name='rower_seasons' value=7 
                     {% for s in rower.season %}{%if s.id == currentseason.id %} checked 
                     {% endif %}{% endfor %} /> 
                 {{currentseason.name}}

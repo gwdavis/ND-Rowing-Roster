@@ -19,7 +19,7 @@
   <tr>
     <td>Graduation Year:</td> <td>{{rower.gyear}}</td></tr>
   <tr>
-    <td>Team for {{currentseason.name}}</td><td>{% for t in currentteam %}{{t.name}} {% endfor %}</td></tr>
+    <td>Team for {{currentseason.name}}</td><td>{{currentteam.name}}</td></tr>
   <tr>
     <td>Seasons of Experience:</td><td>{{rower.experience}}</td></tr>
   <tr>
@@ -40,6 +40,6 @@
 </table>
 
 <!--will need to adjust currentteam[0] when more teams are active, i.e. if more than one team offer a selction -->
-<p><a href="{{url_for('editRower', rower_id=rower.id)}}">Edit</a>  <a href="{{url_for('showRoster', season_id=currentseason.id, team_id = currentteam[0].id)}}">Cancel</a></p>
+<p><a href="{{url_for('editRower', rower_id=rower.id)}}">Edit</a>  <a href="{{url_for('showRoster', season_id=currentseason.id, team_id = currentteam.id)}}">Cancel</a></p>
 
 {% endblock %}
