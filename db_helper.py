@@ -196,6 +196,8 @@ def get_avatar(rower, files, image_folder):
     image = files['photo']
     if rower:
         filename = rower.photo
+    else:
+        filename = 'avatar_missing_lg.png'
     if image and allowed_file(image.filename):
         filename = secure_filename(image.filename)
         image.save(image_folder + filename)
@@ -203,20 +205,22 @@ def get_avatar(rower, files, image_folder):
 
 def add_new_rower(form, files, image_folder):
     """Add new rower in DB"""
+    print image_folder
     new_rower = Rowers(fname=form['fname'],
                        lname=form['lname'],
                        photo=get_avatar(rower=None,
                                         files=files,
                                         image_folder=image_folder),
                        gyear=form['gyear'],
-                       team=get_team_from_team_id(form['team']),
                        experience=form['experience'],
                        mother=form['mother'],
-                       father=form['father'],
+                       father=form['father']
                        )
+    new_rower.team.append(get_team_from_team_id(form['team']))
     if '1' in form.getlist('rower_seasons'):
         add_season_to_rower(new_rower, get_current_season().id)
-
+    session.add(new_rower)
+    session.commit
 
 def update_team_for_rower(rower, team_id):
     team = get_team_from_team_id(team_id)

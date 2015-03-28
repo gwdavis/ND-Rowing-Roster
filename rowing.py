@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
-UPLOAD_FOLDER = dir_path + '/static/images'
+UPLOAD_FOLDER = dir_path + '/static/images/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
@@ -195,15 +195,21 @@ def editRower(rower_id):
 def addRower():
     """Display html dashboard page to add a new rower"""
     # !!! need to fill out once done with edit....
+    current_season = db_helper.get_current_season()
+    print current_season.name
     if request.method == 'POST':
-        rower = db_helper.add_new_rower(request.form)
+        rower = db_helper.add_new_rower(request.form, request.files, UPLOAD_FOLDER)
         flash("You have successfully added a new rower!")
-        current_season = db_helper.current_season()
-        return redirect(url_for('showRoster, season_id=current_season, team_id=rower.team.id'))
+        return redirect(url_for('showRoster',
+                                season_id=current_season.id,
+                                team_id='womens'))
     else:
         seasons = db_helper.get_all_seasons()
         regattas = db_helper.get_all_regattas()
-    return render_template('addrower.html', seasons=seasons, regattas=regattas)
+    return render_template('addrower.html',
+                           seasons=seasons,
+                           currentseason=current_season,
+                           regattas=regattas)
 
 
 @app.route('/rower/<rower_id>/delete/', methods=['GET', 'POST'])
@@ -222,13 +228,13 @@ def deleteRowerConfirmation(rower_id):
         return render_template('deleterower.html', rower=rower,
                                currentseason=current_season,
                                currentteam=current_team)
-        
+
 
 # API Stuff
 # see  http://flask.pocoo.org/docs/0.10/api/#useful-functions-and-classes
 
-#@app.route('/rowers/json')
-#def get_rowers():
+# @app.route('/rowers/json')
+# def get_rowers():
 #    list_of_rowers = session.query(Rowers).order_by(desc(Rowers.lname).all()
 #    return jsonify(Rowers=[e.serialize for e in ])
 

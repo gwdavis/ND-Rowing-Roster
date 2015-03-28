@@ -10,10 +10,10 @@
 <h2>Rower Profile: {{rower.fname}} {{rower.lname}}</h2>
 
 
-<table border="1", style="width:75%">
+<table border="0", style="width:50%">
   
   <tr>
-  	<td align="center" width="40%" rowspan="6"><img src="{{ url_for('static',
+  	<td align="center" width="40%" rowspan="8"><img src="{{ url_for('static',
               filename='images/' + rower.photo)}}" alt="Smiley face" width="100%"></td>
     <td colspan="2"><strong>{{rower.fname}} {{rower.lname}}</strong></td>
   <tr>
@@ -26,9 +26,10 @@
     <td>Mother's name:</td><td>{{rower.mother}}</td></tr>
   <tr>     
     <td>Father's name:</td><td>{{rower.father}}</td></tr>
+  <tr><td></td></tr>
 </table>
 <br><br>
-<table border="1", style="width:75%">
+<table border="1", style="width:50%">
 <caption> Regattas History</caption>
 <!-- for s in rowerhistoryseasons -->
 {% for s in rower.season %}
