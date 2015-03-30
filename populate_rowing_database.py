@@ -74,21 +74,21 @@ session.add(regatta8)
 session.commit()
 
 # Add Rowers
-rower1 = Rowers(fname='Bob', lname='Latham', photo='1.jpg',
+rower1 = Rowers(fname='Bob', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
-rower2 = Rowers(fname='John', lname='Latham', photo='1.jpg',
+rower2 = Rowers(fname='John', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
-rower3 = Rowers(fname='David', lname='Latham', photo='1.jpg',
+rower3 = Rowers(fname='David', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
-rower4 = Rowers(fname='Bill', lname='Latham', photo='1.jpg',
+rower4 = Rowers(fname='Bill', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
-rower5 = Rowers(fname='Susan', lname='Latham', photo='1.jpg',
+rower5 = Rowers(fname='Susan', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
-rower6 = Rowers(fname='Jane', lname='Latham', photo='1.jpg',
+rower6 = Rowers(fname='Jane', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
-rower7 = Rowers(fname='Sally', lname='Latham', photo='1.jpg',
+rower7 = Rowers(fname='Sally', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
-rower8 = Rowers(fname='Holly', lname='Latham', photo='1.jpg',
+rower8 = Rowers(fname='Holly', lname='Latham', photo='avatar_missing_lg.png',
                 gyear='2017', experience='4', mother='Jane', father='Bob')
 
 # Used http://www.pythoncentral.io/overview-sqlalchemys-expression-language-orm-queries/
