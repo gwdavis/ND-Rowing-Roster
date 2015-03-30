@@ -6,12 +6,13 @@
 
 <html>
   <head>
+   
   </head>
   <body>
-    <div>Northeaster Summer Crew:
+    <div><h1>Northeaster Summer Crew:</h1>
       <a href="{{ url_for('mainPage') }}">Home</a>
 	  </div>
-    <hr>
+    
     <div>
       {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -23,6 +24,8 @@
         {% endif %}
       {% endwith %}
     </div>
+    <div class = 'pane'>
     {% block content %}{% endblock %}
+    </div>
   </body>
 </html>

@@ -82,6 +82,7 @@ class Rowers(Base):
     def serialize(self):
         """Returns object data in easily serialized format"""
         return {
+            "id": self.id,
             "fname": self.fname,
             "lname": self.lname,
             "graduation_year": self.gyear,
