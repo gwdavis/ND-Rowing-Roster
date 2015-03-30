@@ -15,10 +15,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Return a json object for a list of
 
-# all rowers
-#    /rowers/json
-# all regattas by a rower:
-#    /rower/rower_id/regattas/json
+
 # Specific rower:
 #   /rower/rower_id/json
 
@@ -66,7 +63,6 @@ def addSeason():
     """Display html dashboard page to register a new season."""
     if request.method == 'POST':
         db_helper.add_new_season(request.form)
-        flash("A new season has been successfully added!")
         return redirect(url_for('showSeasons'))
     else:
         return render_template('addseason.html')
@@ -78,7 +74,6 @@ def editSeason(season_id):
     Argument:   season id"""
     if request.method == 'POST':
         db_helper.update_season(season_id, request.form)
-        flash("You have successfully updated a season!")
         return redirect(url_for('showSeasons'))
     else:
         return render_template('editseason.html', season=editSeason)
@@ -92,7 +87,6 @@ def deleteSeasonConfirmation(season_id):
     args:   season_id"""
     if request.method == 'POST':
         db_helper.remove_season(season_id)
-        flash("You have succesfully removed the season")
         return redirect(url_for('showSeasons'))
     else:
         season = db_helper.get_season_from_season_id(season_id)
@@ -121,7 +115,6 @@ def addRegatta():
     seasons = db_helper.get_all_seasons()
     if request.method == 'POST':
         db_helper.add_new_regatta(request.form)
-        flash("You have successfully added a new regatta!")
         return redirect(url_for('showRegattas'))
     else:
         return render_template('addregatta.html', seasons=seasons)
@@ -133,7 +126,6 @@ def editRegatta(regatta_id):
     argument:   regatta id"""
     if request.method == 'POST':
         db_helper.update_regatta(regatta_id)
-        flash("You have successfully updated your regatta.")
         return redirect(url_for('showRegattas'))
     else:
         seasons = db_helper.get_all_seasons()
@@ -150,7 +142,6 @@ def deleteRegattaConfirmation(regatta_id):
     argument regatta id"""
     if request.method == 'POST':
         db_helper.remove_regatta(regatta_id)
-        flash("You have successfully removed your regatta.")
         return redirect(url_for('showRegattas'))
     else:
         regatta = db_helper.get_regatta_from_regatta_id(regatta_id)
@@ -174,7 +165,6 @@ def editRower(rower_id):
     if request.method == 'POST':
         db_helper.update_rower(rower_id, request.form,
                                request.files, UPLOAD_FOLDER)
-        flash("You have successfully updated your rower!")
         return redirect(url_for('showRower', rower_id=rower_id))
     else:
         rower = db_helper.get_rower_from_rower_id(rower_id)
@@ -199,7 +189,6 @@ def addRower():
     print current_season.name
     if request.method == 'POST':
         rower = db_helper.add_new_rower(request.form, request.files, UPLOAD_FOLDER)
-        flash("You have successfully added a new rower!")
         return redirect(url_for('showRoster',
                                 season_id=current_season.id,
                                 team_id='womens'))
@@ -220,7 +209,6 @@ def deleteRowerConfirmation(rower_id):
                    rower_id=rower_id, season_id=current_season.id)
     if request.method == 'POST':
         db_helper.remove_rower(rower_id)
-        flash("You have successfully updated your rower!")
         return redirect(url_for('showRoster', team_id=current_team.id,
                                 season_id=current_season.id))
     else:
@@ -234,12 +222,30 @@ def deleteRowerConfirmation(rower_id):
 # see  http://flask.pocoo.org/docs/0.10/api/#useful-functions-and-classes
 
 @app.route('/rowers/json')
-def get_rowers():
+def get_rowers_json():
+    """Returns json of all rowers"""
     list_of_rowers = db_helper.get_all_rowers()
     rowers = []
     for r in list_of_rowers:
         rowers.append(r.serialize)
     return jsonify(Rowers=rowers)
+
+
+@app.route('/rower/<rower_id>/regattas/json')
+def get_regattas_for_rower_json(rower_id):
+    """Returns json for all regettas for a given rower ID"""
+    list_of_regattas = db_helper.get_all_regattas_for_rower(rower_id)
+    regattas = []
+    for r in list_of_regattas:
+        regattas.append(r.serialize)
+    return jsonify(Regattas_by_rower=regattas)
+
+
+@app.route('/rower/<rower_id>/json')
+def get_rower_json(rower_id):
+    """Returns json for a given rower ID"""
+    rower = db_helper.get_rower_from_rower_id(rower_id)
+    return jsonify(Rower=rower.serialize)
 
 
 if __name__ == '__main__':
