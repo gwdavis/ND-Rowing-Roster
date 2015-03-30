@@ -62,6 +62,12 @@ def get_all_regattas_for_season(season_id):
     return session.query(Regattas).filter_by(season_id=season_id).all()
 
 
+def get_all_regattas_for_rower(rower_id):
+    """Get regatta object for all the regattas for given season ID."""
+    rower = session.query(Rowers).get(rower_id)
+    return rower.regatta
+
+
 def get_all_regattas():
     """Get regatta object for all regattas."""
     return session.query(Regattas).all()
@@ -69,7 +75,7 @@ def get_all_regattas():
 
 def get_regatta_from_regatta_id(regatta_id):
     """Get regatta object for a given regatta ID."""
-    return session.query(Regattas).get(regatta_id)
+    return session.query(Rowers).get(regatta_id)
 
 
 def get_rower_from_rower_id(rower_id):

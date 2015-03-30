@@ -47,6 +47,18 @@ class Regattas(Base):
     rower = relationship('Rowers', secondary='rowerregattas')
     season = relationship('Seasons')
 
+    @property
+    def serialize(self):
+        """Returns object data in easily serialized format"""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "season_id": self.season_id,
+            "date": self.date,
+            "description": self.description,
+            "weblink": self.weblink
+        }
+
 
 class Rowers(Base):
     __tablename__ = 'rowers'
