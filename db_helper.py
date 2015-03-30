@@ -234,25 +234,6 @@ def update_rower(rower_id, form, files, image_folder):
     return
 
 
-def update_regattas_for_rower(rower, new_rowed_regattas):
-    """Updates rower object by adding new regatta objects and removing
-    deleted regatta objects
-    args:   rower objects
-            new list of rowed regattas"""
-    # great reference for 'getlist' http://stackoverflow.com/questions/
-    # 7996075/iterate-through-checkboxes-in-flask
-    existing_rowed_regattas = []
-    for rr in rower.regatta:
-        existing_rowed_regattas.append(rr.id)
-        if rr.id not in new_rowed_regattas:
-            print 'remove %s' % rr.name
-            rower.regatta.remove(rr)
-    for nr in set(new_rowed_regattas).difference(existing_rowed_regattas):
-        add_regatta_to_rower(rower, nr)
-    print new_rowed_regattas
-    return
-
-
 def remove_rower(rower_id):
     """Remove a rower from the DB."""
     rower = get_rower_from_rower_id(rower_id)
@@ -302,6 +283,26 @@ def add_regatta_to_rower(rower, regatta_id):
             return
     else:
         add_season_to_rower(rower, new_regatta.season_id)
+    return
+
+
+def update_regattas_for_rower(rower, new_rowed_regattas):
+    """Updates rower object by adding new regatta objects and removing
+    deleted regatta objects
+    args:   rower objects
+            new list of rowed regattas"""
+    # great reference for 'getlist' http://stackoverflow.com/questions/
+    # 7996075/iterate-through-checkboxes-in-flask
+    # also http://stackoverflow.com/questions/9335773/python-list-difference
+    existing_rowed_regattas = []
+    for rr in rower.regatta:
+        existing_rowed_regattas.append(rr.id)
+        if rr.id not in new_rowed_regattas:
+            print 'remove %s' % rr.name
+            rower.regatta.remove(rr)
+    for nr in set(new_rowed_regattas).difference(existing_rowed_regattas):
+        add_regatta_to_rower(rower, nr)
+    print new_rowed_regattas
     return
 
 
