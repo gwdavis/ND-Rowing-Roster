@@ -203,6 +203,7 @@ def get_avatar(rower, files, image_folder):
         image.save(image_folder + filename)
     return filename
 
+
 def add_new_rower(form, files, image_folder):
     """Add new rower in DB"""
     print image_folder
@@ -219,14 +220,34 @@ def add_new_rower(form, files, image_folder):
     new_rower.team.append(get_team_from_team_id(form['team']))
     if '1' in form.getlist('rower_seasons'):
         add_season_to_rower(new_rower, get_current_season().id)
+    new_rowed_regattas = form.getlist('rower_regattas')
+    for nr in new_rowed_regattas:
+        add_regatta_to_rower(new_rower, nr)
     session.add(new_rower)
     session.commit
+
 
 def update_team_for_rower(rower, team_id):
     team = get_team_from_team_id(team_id)
     for current_team in rower.team:
         rower.team.remove(current_team)
     rower.team.append(team)
+    return
+
+
+def add_regatta_to_rower(rower, regatta_id):
+    """Adds a regatta reference object to a rower object
+    and if the regatta season is in the rower.season, adds the
+    season to the rower
+    args:   rower oject
+            regatta_id"""
+    new_regatta = session.query(Regattas).get(regatta_id)
+    rower.regatta.append(new_regatta)
+    for s in rower.season:
+        if s.id == new_regatta.season_id:
+            return
+    else:
+        add_season_to_rower(rower, new_regatta.season_id)
     return
 
 def add_season_to_rower(rower, season_id):
@@ -236,7 +257,6 @@ def add_season_to_rower(rower, season_id):
     for season in rower.season:
         if season.id == season_id:
             return
-
     rower.season.append(get_season_from_season_id(season_id))
     return
 
@@ -263,28 +283,34 @@ def update_rower(rower_id, form, files, image_folder):
     rower.mother = form['mother']
     rower.father = form['father']
     update_team_for_rower(rower, form['team'])
+    update_regattas_for_rower(rower,form.getlist('rower_regattas'))
     # Update current season status
     if '1' in form.getlist('rower_seasons'):
         add_season_to_rower(rower, get_current_season().id)
     else:
         remove_season_from_rower(rower, get_current_season().id)
-    # Update regattas rowed
-    # great reference for 'getlist' http://stackoverflow.com/questions/
-    #       7996075/iterate-through-checkboxes-in-flask
-    # !!! for rr in rower.regatta, we are only picking up every other
-    # regatta yet same for loop works on line 265
-    new_rowed_regattas = form.getlist('rower_regattas')
-    for rr in rower.regatta:
-        print 'remove %s' % rr.name
-        rower.regatta.remove(rr)
-    for nr in new_rowed_regattas:
-        new = session.query(Regattas).get(nr)
-        rower.regatta.append(new)
-    print new_rowed_regattas
     session.add(rower)
     session.commit()
     return
 
+
+def update_regattas_for_rower(rower, new_rowed_regattas):
+    """Updates rower object by adding new regatta objects and removing
+    deleted regatta objects
+    args:   rower objects
+            new list of rowed regattas"""
+    # great reference for 'getlist' http://stackoverflow.com/questions/
+    # 7996075/iterate-through-checkboxes-in-flask
+    existing_rowed_regattas = []
+    for rr in rower.regatta:
+        existing_rowed_regattas.append(rr.id)
+        if rr.id not in new_rowed_regattas:
+            print 'remove %s' % rr.name
+            rower.regatta.remove(rr)
+    for nr in set(new_rowed_regattas).difference(existing_rowed_regattas):
+        add_regatta_to_rower(rower, nr)
+    print new_rowed_regattas
+    return
 
 def remove_rower(rower_id):
     """Remove a rower from the DB."""
