@@ -75,7 +75,7 @@ def get_all_regattas():
 
 def get_regatta_from_regatta_id(regatta_id):
     """Get regatta object for a given regatta ID."""
-    return session.query(Rowers).get(regatta_id)
+    return session.query(Regattas).get(regatta_id)
 
 
 def get_rower_from_rower_id(rower_id):
