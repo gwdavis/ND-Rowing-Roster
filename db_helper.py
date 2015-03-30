@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine  # , desc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Regattas, Seasons, Rowers, Teams, RowerSeasons,\
+from database_setup import Regattas, Seasons, Rowers, Teams,\
                            RowerRegattas, RowerTeams, Base
 
 import os
@@ -188,21 +188,6 @@ def remove_regatta(regatta_id):
     session.commit()
     return
 
-def get_avatar(rower, files, image_folder):
-    """get image file for rower avatar
-    args:   request.files from form
-            image_folder path
-    returns:filename"""
-    image = files['photo']
-    if rower:
-        filename = rower.photo
-    else:
-        filename = 'avatar_missing_lg.png'
-    if image and allowed_file(image.filename):
-        filename = secure_filename(image.filename)
-        image.save(image_folder + filename)
-    return filename
-
 
 def add_new_rower(form, files, image_folder):
     """Add new rower in DB"""
@@ -227,52 +212,7 @@ def add_new_rower(form, files, image_folder):
     session.commit
 
 
-def update_team_for_rower(rower, team_id):
-    team = get_team_from_team_id(team_id)
-    for current_team in rower.team:
-        rower.team.remove(current_team)
-    rower.team.append(team)
-    return
-
-
-def add_regatta_to_rower(rower, regatta_id):
-    """Adds a regatta reference object to a rower object
-    and if the regatta season is in the rower.season, adds the
-    season to the rower
-    args:   rower oject
-            regatta_id"""
-    new_regatta = session.query(Regattas).get(regatta_id)
-    rower.regatta.append(new_regatta)
-    for s in rower.season:
-        if s.id == new_regatta.season_id:
-            return
-    else:
-        add_season_to_rower(rower, new_regatta.season_id)
-    return
-
-def add_season_to_rower(rower, season_id):
-    """Adds a season reference object to a rower object
-    args:   rower object
-            season ID"""
-    for season in rower.season:
-        if season.id == season_id:
-            return
-    rower.season.append(get_season_from_season_id(season_id))
-    return
-
-
-def remove_season_from_rower(rower, season_id):
-    """Removes a season reference object from a rower object
-    args:   rower object
-            season ID"""
-    for season in rower.season:
-        if season.id == season_id:
-            rower.season.remove(season)
-    return
-
 def update_rower(rower_id, form, files, image_folder):
-    # !!! 1) fix current season register and regattas
-    # !!! 3) We we really need to get all the data from the form every time?
     """Update fields for a rower already in the DB."""
     rower = get_rower_from_rower_id(rower_id)
     rower.photo = get_avatar(rower, files, image_folder)
@@ -283,7 +223,7 @@ def update_rower(rower_id, form, files, image_folder):
     rower.mother = form['mother']
     rower.father = form['father']
     update_team_for_rower(rower, form['team'])
-    update_regattas_for_rower(rower,form.getlist('rower_regattas'))
+    update_regattas_for_rower(rower, form.getlist('rower_regattas'))
     # Update current season status
     if '1' in form.getlist('rower_seasons'):
         add_season_to_rower(rower, get_current_season().id)
@@ -312,9 +252,75 @@ def update_regattas_for_rower(rower, new_rowed_regattas):
     print new_rowed_regattas
     return
 
+
 def remove_rower(rower_id):
     """Remove a rower from the DB."""
     rower = get_rower_from_rower_id(rower_id)
     session.delete(rower)
     session.commit()
+    return
+
+
+# Methods of updating rower
+
+
+def get_avatar(rower, files, image_folder):
+    """get image file for rower avatar
+    args:   request.files from form
+            image_folder path
+    returns:filename"""
+    image = files['photo']
+    if rower:
+        filename = rower.photo
+    else:
+        filename = 'avatar_missing_lg.png'
+    if image and allowed_file(image.filename):
+        filename = secure_filename(image.filename)
+        image.save(image_folder + filename)
+    return filename
+
+
+def update_team_for_rower(rower, team_id):
+    """Update team object in rower object"""
+    team = get_team_from_team_id(team_id)
+    for current_team in rower.team:
+        rower.team.remove(current_team)
+    rower.team.append(team)
+    return
+
+
+def add_regatta_to_rower(rower, regatta_id):
+    """Adds a regatta reference object to a rower object
+    and if the regatta season is in the rower.season, adds the
+    season to the rower
+    args:   rower oject
+            regatta_id"""
+    new_regatta = session.query(Regattas).get(regatta_id)
+    rower.regatta.append(new_regatta)
+    for s in rower.season:
+        if s.id == new_regatta.season_id:
+            return
+    else:
+        add_season_to_rower(rower, new_regatta.season_id)
+    return
+
+
+def add_season_to_rower(rower, season_id):
+    """Adds a season reference object to a rower object
+    args:   rower object
+            season ID"""
+    for season in rower.season:
+        if season.id == season_id:
+            return
+    rower.season.append(get_season_from_season_id(season_id))
+    return
+
+
+def remove_season_from_rower(rower, season_id):
+    """Removes a season reference object from a rower object
+    args:   rower object
+            season ID"""
+    for season in rower.season:
+        if season.id == season_id:
+            rower.season.remove(season)
     return
