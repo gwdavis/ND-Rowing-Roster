@@ -3,10 +3,10 @@
                 2)Templates and Forms
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
-<html>
-<header>
-</header>
-<body>
+
+{% extends "base.html" %}
+{% block content %}
+
 <h2>Register a New Regatta</h2>
 
 <form action="{{ url_for('addRegatta')}}" method = 'post'>
@@ -29,9 +29,8 @@
 			<dd><input size='60' name='description' placeholder='A great regatta for all levels'></textarea></dd>
 	</dl>
 
-	<input type='submit' value='Create'>  <a href='#'>Cancel</a>
+	<input type='submit' value='Create'>  <a href='{{ url_for('showRegattas')}}'>Cancel</a>
 
 </form>
 
-</body>
-</html>
+{% endblock%}

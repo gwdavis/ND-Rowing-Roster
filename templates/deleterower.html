@@ -5,10 +5,9 @@
  March 2015 by Gary Davis -->
 
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 <h2>DELETE Rower confirmation: {{rower.fname}} {{rower.lname}}</h2>
 
 <h3> Are you sure you wish to delete this rower and all their associated information? The rower will not show an any previous season rosters or results. Instead you may wish to edit the seasons that the rower crewed.</h3>
@@ -19,7 +18,7 @@
   
   <tr>
   	<td align="center" width="40%" rowspan="6"><img src="{{ url_for('static',
-              filename=rower.photo)}}" alt="Smiley face" width="100%"></td>
+              filename='images/' + rower.photo)}}" alt="Smiley face" width="100%"></td>
     <td colspan="2"><strong>{{rower.fname}} {{rower.lname}}</strong></td>
   <tr>
     <td>Graduation Year:</td> <td>{{rower.gyear}}</td></tr>
@@ -48,5 +47,4 @@
 </form>
 
 
-</body>
-</html>
+{% endblock %}

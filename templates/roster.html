@@ -4,10 +4,9 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 {% if team_id == 'womens' %}
 	<h2>{{season.name}} Roster: Women's Crew</h2>
 {% elif team_id =='mens' %}
@@ -27,18 +26,17 @@
     <th>Mother</th>
     <th>Father</th>
   </tr>
-  {% for r in teamroster %}
+  {% for r in teamroster.rower %}
   
   <tr>
   	<td><img src="{{ url_for('static',
-              filename=r.rower.photo)}}" alt=r.lname height="75"></td>
-    <td><a href='{{url_for('showRower',rower_id=r.id)}}'>{{r.rower.fname}} {{r.rower.lname}}</a></td>
-    <td>{{r.rower.gyear}}</td>
-    <td>{{r.rower.experience}}</td>
-    <td>{{r.rower.mother}}</td>
-    <td>{{r.rower.father}}</td>
+                 filename='images/' + r.photo)}}" alt={{r.lname}} height="75"></td>
+    <td><a href='{{url_for('showRower',rower_id=r.id)}}'>{{r.fname}} {{r.lname}}</a></td>
+    <td>{{r.gyear}}</td>
+    <td>{{r.experience}}</td>
+    <td>{{r.mother}}</td>
+    <td>{{r.father}}</td>
   </tr>
   {% endfor %}
-</table>
-</body>
-</html>
+
+{% endblock %}

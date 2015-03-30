@@ -4,18 +4,20 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
+
 <h2>Edit Regatta Information:  {{regatta.name}}</h2>
+
+{{regatta.season.name}}
 
 <form action="{{ url_for('editRegatta', regatta_id=regatta.id)}}" method = 'post'>
 
 	<dl>
 		<dt>Season:</dt>
 			<dd><select name='season_id'>
-				<option value={{regatta.season_id}}>{{regatta.season_id}}</option>
+				<option value={{regatta.season_id}}>{{regatta.season.name}}</option>
 			{%for s in seasons %}
 				<option value={{s.id}}>{{s.name}}</option>
 			{% endfor %}
@@ -34,5 +36,4 @@
 
 	<input type='submit' value='Submit Edits'>  <a href='{{ url_for('showRegatta', regatta_id=regatta.id)}}'>Cancel</a>  <a href='{{ url_for('deleteRegattaConfirmation', regatta_id=regatta.id)}}'>DELETE</a>
 
-</body>
-</html>
+{% endblock %}

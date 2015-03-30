@@ -4,32 +4,35 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 <h2>Add New Rower Profile</h2>
 
-<form action("{{ url_for('addRower')}}" method = 'POST')>
+<form action("{{ url_for('addRower')}}" method = 'POST' enctype='multipart/form-data')>
 
 <table border="1", style="width:75%">
   
   <tr>
   	<td align="center" width="15%" rowspan="9"><img src="{{ url_for('static',
-              filename='1.jpg')}}" alt="Smiley face" width="100%"><input type='file' name='photo' accept="image/*"><br> 300KB or less please</td>
+              filename='images/avatar_missing_lg.png')}}" alt="Smiley face" width="100%"><input type='file' name='photo' accept="image/*"><br> 300KB or less please<br>Ideal crop ratio: 100:125</td>
   <tr>
-    <td>First Name</td><td><input type='text' size='30' name='fname' placeholder='Johnny'></td></tr>
+    <td>First Name:</td><td><input type='text' size='30' name='fname' placeholder='Johnny'></td></tr>
   <tr>
-    <td>Last Name</td><td><input type='text' size='30' name='lname' placeholder='Awesome'></td></tr>
+    <td>Last Name:</td><td><input type='text' size='30' name='lname' placeholder='Awesome'></td></tr>
   <tr>
     <td>Graduation Year:</td> <td><input type='text' size='6' name='gyear' placeholder='2030'></td></tr>
   <tr>
-    <td>Team:</td><td><input type='radio' name='team' value="men"> Men's <input type='radio' name='team' value="women"> Women's</td></tr>
+    <td>Team:</td><td><input type='radio' name='team' value="mens"> Men's <input type='radio' name='team' value="womens"> Women's</td></tr>
   
   <!-- !!! below need to add max(seasons.id) and season.name for the same -->
   
   <tr>
-    <td>Register for this Season?:</td><td><input type=checkbox name='rower_seasons' value='s15'> Spring 2015</td></tr>
+    <td>Register for this Season?:</td>
+    <td><input type='hidden' name='rower_seasons' value='0' />
+        <label><input type='checkbox' name='rower_seasons' value='1' checked/>
+        {{currentseason.name}}
+    </td></tr>
   <tr>
     <td>Seasons of Experience:</td><td><input type='text' size='6' name='experience' placeholder='4'></td></tr>
   <tr>
@@ -54,9 +57,8 @@
 {% endfor %}
 {% endfor %}
 </table>
-<p><input type='submit' value='Submit'>   <a href=#>Cancel</a></p>
+<p><input type='submit' value='Submit'>   <a href={{ url_for('mainPage') }}>Cancel</a></p>
 
 </form>
 
-</body>
-</html>
+{% endblock %}

@@ -4,41 +4,43 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
- <html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 <h2>Rower Profile: {{rower.fname}} {{rower.lname}}</h2>
 
-<table border="1", style="width:75%">
+
+<table border="0", style="width:50%">
   
   <tr>
-  	<td align="center" width="40%" rowspan="6"><img src="{{ url_for('static',
-              filename=rower.photo)}}" alt="Smiley face" width="100%"></td>
+  	<td align="center" width="40%" rowspan="8"><img src="{{ url_for('static',
+              filename='images/' + rower.photo)}}" alt="Smiley face" width="100%"></td>
     <td colspan="2"><strong>{{rower.fname}} {{rower.lname}}</strong></td>
   <tr>
     <td>Graduation Year:</td> <td>{{rower.gyear}}</td></tr>
   <tr>
-    <td>Team for {{currentseason.name}}</td><td>{{currentseason.team_name}}</td></tr>
+    <td>Team for {{currentseason.name}}</td><td>{{currentteam.name}}</td></tr>
   <tr>
     <td>Seasons of Experience:</td><td>{{rower.experience}}</td></tr>
   <tr>
     <td>Mother's name:</td><td>{{rower.mother}}</td></tr>
   <tr>     
     <td>Father's name:</td><td>{{rower.father}}</td></tr>
+  <tr><td></td></tr>
 </table>
 <br><br>
-<table border="1", style="width:75%">
+<table border="1", style="width:50%">
 <caption> Regattas History</caption>
-{% for s in rowerhistoryseasons %}
-<tr><td colspan="2" align="center"><strong>{{s.season.name}}</stong></td></tr>
-{% for r in rowerhistoryregattas if r.regatta.id == s.season.id %}
-<tr><td>{{r.regatta.name}}</td><td>{{r.regatta.date}}</td></tr>
+<!-- for s in rowerhistoryseasons -->
+{% for s in rower.season %}
+<tr><td colspan="2" align="center"><strong>{{s.name}}</stong></td></tr>
+{% for r in rower.regatta if r.season_id == s.id %}
+<tr><td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td><td>{{r.date.strftime('%a, %B %d, %Y')}}</td></tr>
 {% endfor %}
 {% endfor %}
 </table>
 
-<p><a href="{{url_for('editRower', rower_id=rower.id)}}">Edit</a>  <a href="{{url_for('showRoster', season_id=currentseason.season_id, team_id = currentseason.team_id)}}">Cancel</a></p>
+<!--will need to adjust currentteam[0] when more teams are active, i.e. if more than one team offer a selction -->
+<p><a href="{{url_for('editRower', rower_id=rower.id)}}">Edit</a>  <a href="{{url_for('showRoster', season_id=currentseason.id, team_id = currentteam.id)}}">Cancel</a></p>
 
-</body>
-</html>
+{% endblock %}

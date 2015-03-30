@@ -4,10 +4,9 @@
                 3)CRUD Functionality
  March 2015 by Gary Davis -->
 
-<html>
-<header>
-</header>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
 <h2>DELETE Existing Season: {{season.name}}</h2>
 
 <form action="{{ url_for('deleteSeasonConfirmation', season_id=season.id)}}" method = 'post'>
@@ -26,5 +25,4 @@
 
 </form>
 
-</body>
-</html>
+{% endblock %}
