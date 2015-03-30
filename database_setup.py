@@ -1,11 +1,3 @@
-# Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
-# v0.1 adds:   1)Routing
-#                2)Templates and Forms
-#                3)CRUD Functionality
-# March 2015 by Gary Davis
-
-# changes on march 20 11am are to refactor associative table appropriately
-
 import os
 import sys
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Table
@@ -71,6 +63,18 @@ class Rowers(Base):
     season = relationship('Seasons', secondary='rowerseasons')
     regatta = relationship('Regattas', secondary='rowerregattas')
     team = relationship('Teams', secondary='rowerteams')
+
+    @property
+    def serialize(self):
+        """Returns object data in easily serialized format"""
+        return {
+            "fname": self.fname,
+            "lname": self.lname,
+            "graduation_year": self.gyear,
+            "experience": self.experience,
+            "mother_fname": self.mother,
+            "father_fname": self.father
+        }
 
 
 class Teams(Base):

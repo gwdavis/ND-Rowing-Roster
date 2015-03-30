@@ -233,10 +233,13 @@ def deleteRowerConfirmation(rower_id):
 # API Stuff
 # see  http://flask.pocoo.org/docs/0.10/api/#useful-functions-and-classes
 
-# @app.route('/rowers/json')
-# def get_rowers():
-#    list_of_rowers = session.query(Rowers).order_by(desc(Rowers.lname).all()
-#    return jsonify(Rowers=[e.serialize for e in ])
+@app.route('/rowers/json')
+def get_rowers():
+    list_of_rowers = db_helper.get_all_rowers()
+    rowers = []
+    for r in list_of_rowers:
+        rowers.append(r.serialize)
+    return jsonify(Rowers=rowers)
 
 
 if __name__ == '__main__':

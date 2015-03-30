@@ -77,6 +77,12 @@ def get_rower_from_rower_id(rower_id):
     return session.query(Rowers).get(rower_id)
 
 
+def get_all_rowers():
+    """Get rower object for a given rower ID."""
+    return session.query(Rowers).order_by(Rowers.lname.asc()).all()
+
+
+
 def get_list_rowed_regattas(rower_id):
     """Get list of regattas rowed for a given rower ID."""
     rower = session.query(Rowers).get(rower_id)
