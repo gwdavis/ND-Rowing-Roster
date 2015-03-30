@@ -47,6 +47,7 @@ class Regattas(Base):
     rower = relationship('Rowers', secondary='rowerregattas')
     season = relationship('Seasons')
 
+    # http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
     @property
     def serialize(self):
         """Returns object data in easily serialized format"""
@@ -76,17 +77,24 @@ class Rowers(Base):
     regatta = relationship('Regattas', secondary='rowerregattas')
     team = relationship('Teams', secondary='rowerteams')
 
+    # http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
     @property
     def serialize(self):
         """Returns object data in easily serialized format"""
         return {
+            "id": self.id,
             "fname": self.fname,
             "lname": self.lname,
             "graduation_year": self.gyear,
             "experience": self.experience,
             "mother_fname": self.mother,
-            "father_fname": self.father
+            "father_fname": self.father,
+            "regattas": self.serialized_regatta
         }
+
+    @property
+    def serialized_regatta(self):
+        return [r.serialize for r in self.regatta]
 
 
 class Teams(Base):

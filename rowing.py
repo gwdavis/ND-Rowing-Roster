@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, send_file
 
 import os
 import db_helper
+import StringIO
+import csv
+
 
 app = Flask(__name__)
 
@@ -9,18 +12,6 @@ path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 UPLOAD_FOLDER = dir_path + '/static/images/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-# API :
-
-# Return a json object for a list of
-
-
-# Specific rower:
-#   /rower/rower_id/json
-
-# import jsonify and a serializable property to your database
-# setup file where needed
 
 
 # This will be another page so for the time being we will redirect
@@ -246,6 +237,88 @@ def get_rower_json(rower_id):
     """Returns json for a given rower ID"""
     rower = db_helper.get_rower_from_rower_id(rower_id)
     return jsonify(Rower=rower.serialize)
+
+
+@app.route('/rowers/download')
+def download_rowers():
+    "Export a CSV of all rowers"
+    # Source: http://stackoverflow.com/questions/27238247/how
+    # -to-stream-csv-from-flask-via-sqlalchemy-query
+    rowers = db_helper.get_all_rowers()
+    csvfile = StringIO.StringIO()
+    headers = [
+        "id",
+        "fname",
+        "lname",
+        "graduation_year",
+        "experience",
+        "mother_fname",
+        "father_fname",
+    ]
+    # Couldn't get a slice from serialize property so do it here
+    rows = []
+    for r in rowers:
+        rows.append(
+            {
+                "id": r.id,
+                "fname": r.fname,
+                "lname": r.lname,
+                "graduation_year": r.gyear,
+                "experience": r.experience,
+                "mother_fname": r.mother,
+                "father_fname": r.father,
+            }
+        )
+    writer = csv.DictWriter(csvfile, headers)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(
+            dict(
+                (k, v.encode('utf-8') if type(v) is unicode else v) for k, v in row.iteritems()
+            )
+        )
+    csvfile.seek(0)
+    return send_file(csvfile, attachment_filename='rowers.csv', as_attachment=True)
+
+
+@app.route('/regattas/download')
+def download_regattas():
+    "Export a CSV of all regattas"
+    # Source: http://stackoverflow.com/questions/27238247/how
+    # -to-stream-csv-from-flask-via-sqlalchemy-query
+    regattas = db_helper.get_all_regattas()
+    csvfile = StringIO.StringIO()
+    headers = [
+        "id",
+        "name",
+        "season_id",
+        "date",
+        "description",
+        "weblink"
+    ]
+    # Couldn't get a slice from serialize property so do it here
+    rows = []
+    for r in regattas:
+        rows.append(
+            {
+                "id": r.id,
+                "name": r.name,
+                "season_id": r.season_id,
+                "date": r.date,
+                "description": r.description,
+                "weblink": r.weblink
+            }
+        )
+    writer = csv.DictWriter(csvfile, headers)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(
+            dict(
+                (k, v.encode('utf-8') if type(v) is unicode else v) for k, v in row.iteritems()
+            )
+        )
+    csvfile.seek(0)
+    return send_file(csvfile, attachment_filename='regattas.csv', as_attachment=True)
 
 
 if __name__ == '__main__':
