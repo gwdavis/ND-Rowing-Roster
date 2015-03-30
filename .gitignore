@@ -8,3 +8,5 @@ rowingteam
 database_setup_new.py
 
 database_setup_backup.py
+
+*.db
