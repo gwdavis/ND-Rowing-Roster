@@ -61,6 +61,7 @@ def addSeason():
     """Display html dashboard page to register a new season."""
     if request.method == 'POST':
         db_helper.add_new_season(request.form)
+        flash("You've successfully added a season")
         return redirect(url_for('showSeasons'))
     else:
         return render_template('addseason.html')
@@ -72,6 +73,7 @@ def editSeason(season_id):
     Argument:   season id"""
     if request.method == 'POST':
         db_helper.update_season(season_id, request.form)
+        flash("You've successfully edited a season")
         return redirect(url_for('showSeasons'))
     else:
         season = db_helper.get_season_from_season_id(season_id)
@@ -86,6 +88,7 @@ def deleteSeasonConfirmation(season_id):
     args:   season_id"""
     if request.method == 'POST':
         db_helper.remove_season(season_id)
+        flash("You've successfully DELETED a season")
         return redirect(url_for('showSeasons'))
     else:
         season = db_helper.get_season_from_season_id(season_id)
@@ -114,6 +117,7 @@ def addRegatta():
     seasons = db_helper.get_all_seasons()
     if request.method == 'POST':
         db_helper.add_new_regatta(request.form)
+        flash("You've successfully added a regatta")
         return redirect(url_for('showRegattas'))
     else:
         return render_template('addregatta.html', seasons=seasons)
@@ -125,6 +129,7 @@ def editRegatta(regatta_id):
     argument:   regatta id"""
     if request.method == 'POST':
         db_helper.update_regatta(regatta_id)
+        flash("You've successfully edited a regatta")
         return redirect(url_for('showRegattas'))
     else:
         seasons = db_helper.get_all_seasons()
@@ -141,6 +146,7 @@ def deleteRegattaConfirmation(regatta_id):
     argument regatta id"""
     if request.method == 'POST':
         db_helper.remove_regatta(regatta_id)
+        flash("You've successfully DELETED a regatta")
         return redirect(url_for('showRegattas'))
     else:
         regatta = db_helper.get_regatta_from_regatta_id(regatta_id)
@@ -164,6 +170,7 @@ def editRower(rower_id):
     if request.method == 'POST':
         db_helper.update_rower(rower_id, request.form,
                                request.files, UPLOAD_FOLDER)
+        flash("You've successfully edited a rower")
         return redirect(url_for('showRower', rower_id=rower_id))
     else:
         rower = db_helper.get_rower_from_rower_id(rower_id)
@@ -188,13 +195,14 @@ def addRower():
     print current_season.name
     if request.method == 'POST':
         rower = db_helper.add_new_rower(request.form, request.files, UPLOAD_FOLDER)
+        flash("You've successfully added a rower")
         return redirect(url_for('showRoster',
                                 season_id=current_season.id,
                                 team_id='womens'))
     else:
         seasons = db_helper.get_all_seasons()
         regattas = db_helper.get_all_regattas()
-    return render_template('addrower.html',
+        return render_template('addrower.html',
                            seasons=seasons,
                            currentseason=current_season,
                            regattas=regattas)
@@ -208,6 +216,7 @@ def deleteRowerConfirmation(rower_id):
                    rower_id=rower_id, season_id=current_season.id)
     if request.method == 'POST':
         db_helper.remove_rower(rower_id)
+        flash("You've successfully DELETED a rower")
         return redirect(url_for('showRoster', team_id=current_team.id,
                                 season_id=current_season.id))
     else:
