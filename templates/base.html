@@ -1,31 +1,51 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <title>NE Crew</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}">
   </head>
   <body>
-    <div><h1>Northeaster Summer Crew:</h1>
-      <a href="{{ url_for('mainPage') }}">Home</a>
-	  </div>
-    
-    <div>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class=flashes>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
+  <!-- http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_his_back -->
+  <script>
+    function goBack() {
+        window.history.back();
+    }
+  </script>
+  <div class="container-fluid">
+    <header class='page.header'>
+      <div><h1>Northeastern Crew:</h1>                
+          <ul class="nav nav-tabs" role="tablist">
+            <li><a href="{{ url_for('mainPage') }}">Home</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Admin</a></li>        
           </ul>
-        {% endif %}
-      {% endwith %}
-    </div>
-    <div class = 'pane'>
-    {% block content %}{% endblock %}
-    </div>
+  	  </div>
+    </header>
+    <section>
+      <div class = 'pane'>
+      <!-- Flash message area -->
+        <div class = 'flash'>
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <ul>
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+        </div>
+      <!-- Content Block -->
+      {% block content %}{% endblock %}
+      </div>
+    </section>
+    <footer style="padding-top: 10px;">
+    <center>Gary W. Davis</center>
+    </footer>
+  </div>
   </body>
 </html>

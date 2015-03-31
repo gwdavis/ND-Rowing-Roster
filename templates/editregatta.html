@@ -8,32 +8,57 @@
 {% block content %}
 
 
-<h2>Edit Regatta Information:  {{regatta.name}}</h2>
+<h2>Edit Regatta Information:  <br><small>{{regatta.season.name}}<br>{{regatta.name}}</small></h2>
 
-{{regatta.season.name}}
+<form class="form-horizontal" action="{{ url_for('editRegatta', regatta_id=regatta.id)}}" method = 'post'>
+	<div class='form-group'>
+    <label for="inputSeason" class="control-label col-xs-2">Season:</label>
+    <div class="col-xs-10">
+      <select class="form-control" id="inputSeason" name='season_id'>
+        <option value={{regatta.season_id}}>{{regatta.season.name}}</option>
+				{%for s in seasons %}
+					<option value={{s.id}}>{{s.name}}</option>
+				{% endfor %}
+			</select>
+    </div>
+  </div>
+	<div class='form-group'>
+    <label for="inputName" class="control-label col-xs-2">Regatta Name:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputName" name='name' value='{{regatta.name}}' required>
+    </div>
+  </div>
+	<div class='form-group'>
+    <label for="inputDate" class="control-label col-xs-2">Date:</label>
+    <div class="col-xs-10">
+    	<!-- using the %Y-%m-%d from to be compatible with browsers that support the type=date format for pop-up calendar input -->
+      <input type=date class="form-control" id="inputDate" name='date' value={{regatta.date.strftime('%Y-%m-%d')}} required>
+    </div>
+  </div>	
+	<div class='form-group'>
+    <label for="inputLink" class="control-label col-xs-2">Link to regatta website:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputLink" name='weblink' value='{{regatta.weblink}}'>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputDescr" class="control-label col-xs-2">Description:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputDescr" name='description' value='{{regatta.description}}'>
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <button type="submit" value='Submit Edits' class="btn btn-primary">Submit</button>
+      <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <a class="btn btn-warning" href="{{ url_for('deleteRegattaConfirmation', regatta_id=regatta.id)}}" role="button">Delete</a>
+    </div>
+  </div>
 
-<form action="{{ url_for('editRegatta', regatta_id=regatta.id)}}" method = 'post'>
-
-	<dl>
-		<dt>Season:</dt>
-			<dd><select name='season_id'>
-				<option value={{regatta.season_id}}>{{regatta.season.name}}</option>
-			{%for s in seasons %}
-				<option value={{s.id}}>{{s.name}}</option>
-			{% endfor %}
-				</select></dd>
-			
-		<dt>Regatta Name:</dt>
-			<dd><input type ='text' size='60' name='name' value='{{regatta.name}}'></dd>
-		<dt>Date:</dt>
-			<!-- using the %Y-%m-%d from to be compatible with browsers that support the type=date format for pop-up calendar input -->
-			<dd><input type=date name='date' size='12'value={{regatta.date.strftime('%Y-%m-%d')}}></dd>
-		<dt>Link to regatta website:</dt>
-			<dd><input type ='text' size='60' name='weblink' value='{{regatta.weblink}}'></dd>
-		<dt>Description:</dt>
-			<dd><input type='text' size='60' name='description' value='{{regatta.description}}'></textarea></dd>
-	</dl>
-
-	<input type='submit' value='Submit Edits'>  <a href='{{ url_for('showRegatta', regatta_id=regatta.id)}}'>Cancel</a>  <a href='{{ url_for('deleteRegattaConfirmation', regatta_id=regatta.id)}}'>DELETE</a>
+</form>
 
 {% endblock %}

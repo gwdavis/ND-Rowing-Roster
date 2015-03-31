@@ -1,35 +1,33 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Roster and Regatta Information: {{season.description}}</h2>
-<h3>Rosters</h3>
-	<ul>
-	<li><a href='{{url_for('showRoster', season_id=season.id, team_id='mens')}}'>Men's Roster</a></li>
-	<li><a href='{{url_for('showRoster', season_id=season.id, team_id='womens')}}'>Women's Roster</a></li>
-	</ul>
-<h3>Regatta Schedule</h3>
-<table>
-  <tr>
-    <th>Regatta</th>
-    <th>Date</th>
-  </tr>
-  {% for r in regattas %}
-  <tr>
-    <td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td>
-    <td>{{r.date.strftime('%a, %B %d, %Y')}}</td>
-  </tr>
-  {% endfor %}
-</table>
+<h2 class='pheader'>Roster and Regatta Information: <br><small>{{season.description}}</small></h2>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Rosters</h4></div>
+  <table class="table table-hover">
+  	
+  	<tr><td><a href='{{url_for('showRoster', season_id=season.id, team_id='mens')}}'>Men's Roster</a></td></tr>
+  	<tr><td><a href='{{url_for('showRoster', season_id=season.id, team_id='womens')}}'>Women's Roster</a></td></tr>
+  </table>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Regatta Schedule</h4></div>
+  <table class="table table-hover">
+    
+    {% for r in regattas %}
+    <tr>
+      <td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td>
+      <td>{{r.date.strftime('%a, %B %d, %Y')}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
 </body>
 
 <br><br>
 
-<a href='{{url_for('showRegattas')}}'>See all regattas</a>
+<a href='{{url_for('showRegattas')}}'><button type="button" class="btn btn-primary">See all regattas</button></a>
 
 {% endblock %}

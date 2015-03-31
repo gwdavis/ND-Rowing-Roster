@@ -1,27 +1,35 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Register a New Season</h2>
+<h2 class='phead'>Register a New Season</h2>
 
-<form action="{{ url_for('addSeason')}}" method = 'post'>
 
-	<dl>
-		<dt>Regatta Name:</dt>
-			<dd><input type ='text' size='30' name='name' placeholder='e.g. Winter 2015'></dd>
-		<dt>Short Name:</dt>
-			<dd><input type ='text' size='5' name='short' placeholder='W15'></dd>
-		<dt>Description:</dt>
-			<dd><input type ='text' size='30' name='description' placeholder='Winter 2014-2015'></dd>
-	</dl>
-
-	<input type='submit' value='Create'>
-
+<form class="form-horizontal" action="{{ url_for('addSeason')}}" method = 'post'>
+  <div class='form-group'>
+    <label for="inputName" class="control-label col-xs-2">Season Name:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputName" name='name' placeholder='e.g. Winter 2015' required>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputShort" class="control-label col-xs-2">Short Name:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputShort" name='short' placeholder='W15' required>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputDescr" class="control-label col-xs-2">Description:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputDescr" name='description' placeholder='Winter 2014-2015' required>
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <button type="submit" value='Create' class="btn btn-primary">Create</button>
+      <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+    </div>
+  </div>
 </form>
+
 
 {% endblock %}

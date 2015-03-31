@@ -1,26 +1,19 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
 
-<h2>Regattas</h2>
+<h2 class='pheader'>Regattas</h2>
 
-<p><a href='{{url_for('addRegatta')}}'>Add</a></p>
+<div class="panel panel-default", style="width:75%">
+	<table class="table table-hover">
+	{% for s in seasons %}
+	<tr><td colspan="2" align="center"><h4>{{s.description}}</h4></td></tr>
+	{% for r in regattas if r.season_id == s.id %}
+	<tr><td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td><td>{{r.date.strftime('%a, %B %d, %Y')}}</td></tr>
+	{% endfor %}
+	{% endfor %}
+	</table>
+</div>
 
-
-<table border="1", style="width:75%">
-<caption> Regattas</caption>
-{% for s in seasons %}
-<tr><td colspan="2" align="center"><strong>{{s.description}}</stong></td></tr>
-{% for r in regattas if r.season_id == s.id %}
-<tr><td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td><td>{{r.date.strftime('%a, %B %d, %Y')}}</td></tr>
-{% endfor %}
-{% endfor %}
-</table>
-
+<p><a href='{{url_for('addRegatta')}}'><button type="button" class="btn btn-primary">Add New</button></a></p>
 {% endblock %}

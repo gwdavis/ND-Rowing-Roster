@@ -32,6 +32,13 @@ def seasonSummary(season_id):
                            regattas=regattas)
 
 
+@app.route('/admin/')
+def dashboard():
+    """Handler for admin dashboard page"""
+    season = db_helper.get_current_season()
+    return render_template('dashboard.html', season=season)
+
+
 @app.route('/<season_id>/roster/<team_id>/')
 def showRoster(season_id, team_id):
     """Display html page showing roster for a target team and season.
@@ -67,7 +74,8 @@ def editSeason(season_id):
         db_helper.update_season(season_id, request.form)
         return redirect(url_for('showSeasons'))
     else:
-        return render_template('editseason.html', season=editSeason)
+        season = db_helper.get_season_from_season_id(season_id)
+        return render_template('editseason.html', season=season)
 
 
 @app.route('/season/<season_id>/delete/', methods=['GET', 'POST'])

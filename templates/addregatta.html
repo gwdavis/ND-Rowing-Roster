@@ -1,35 +1,49 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Register a New Regatta</h2>
+<h2 class="phead">Register a New Regatta</h2>
 
-<form action="{{ url_for('addRegatta')}}" method = 'post'>
-
-	<dl>
-		<dt>Season:</dt>
-			<dd><select name='season_id'>
-			{%for s in seasons %}
-				<option value={{s.id}}>{{s.name}}</option>
-			{% endfor %}
-				</select></dd>
-			
-		<dt>Regatta Name:</dt>
-			<dd><input type='text' size='60' name='name' placeholder='e.g. Sarasota Invitational'></dd>
-		<dt>Date:</dt>
-			<dd><input type=date name='date' size='12' placeholder='2015-4-12'></dd>
-		<dt>Link to regatta website:</dt>
-			<dd><input type='text' size='60' name='weblink' placeholder='regatta.com'></dd>
-		<dt>Description:</dt>
-			<dd><input size='60' name='description' placeholder='A great regatta for all levels'></textarea></dd>
-	</dl>
-
-	<input type='submit' value='Create'>  <a href='{{ url_for('showRegattas')}}'>Cancel</a>
+<form class="form-horizontal" action="{{ url_for('addRegatta')}}" method = 'post'>
+	<div class='form-group'>
+    <label for="inputSeason" class="control-label col-xs-2">Season:</label>
+    <div class="col-xs-10">
+      <select class="form-control" id="inputSeason" name='season_id'>
+        {%for s in seasons %}
+  				<option value={{s.id}}>{{s.name}}</option>
+  			{% endfor %}
+			</select>
+    </div>
+  </div>
+	<div class='form-group'>
+    <label for="inputName" class="control-label col-xs-2">Regatta Name:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputName" name='name' placeholder='e.g. Sarasota Invitational' required>
+    </div>
+  </div>
+	<div class='form-group'>
+    <label for="inputDate" class="control-label col-xs-2">Date:</label>
+    <div class="col-xs-10">
+      <input type=date class="form-control" id="inputDate" name='date' placeholder='2015-4-12' required>
+    </div>
+  </div>	
+	<div class='form-group'>
+    <label for="inputLink" class="control-label col-xs-2">Link to regatta website:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputLink" name='weblink' placeholder='regatta.com'>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputDescr" class="control-label col-xs-2">Description:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputDescr" name='description' placeholder='A great regatta for all levels'>
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <button type="submit" value='Create' class="btn btn-primary">Create</button>
+      <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+    </div>
+  </div>
 
 </form>
 

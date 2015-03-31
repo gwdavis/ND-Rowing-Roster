@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class='pheader'>Admin Dashboard</small></h2>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Rowers</h4></div>
+  <table class="table table-hover">
+  	<tr><td><a href='{{url_for('showRoster', season_id=season.id, team_id='mens')}}'>Men's Roster</a></td></tr>
+  	<tr><td><a href='{{url_for('showRoster', season_id=season.id, team_id='womens')}}'>Women's Roster</a></td></tr>
+    <tr><td><a href='{{url_for('addRower')}}'>Add Rower</a></td></tr>
+  </table>
+</div>  
+
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Regattas</h4></div>
+  <table class="table table-hover">
+    <tr><td><a href='{{url_for('showRegattas')}}'>All Regattas</a></td></tr>
+    <tr><td><a href='{{url_for('addRegatta')}}'>Add Regatta</a></td></tr>
+  </table>
+</div>  
+
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Seasons</h4></div>
+  <table class="table table-hover">
+    <tr><td><a href='{{url_for('showSeasons')}}'>All Seasons</a></td></tr>
+    <tr><td><a href='{{url_for('addSeason')}}'>Add Season</a></td></tr>
+  </table>
+</div>  
+
+{% endblock %}

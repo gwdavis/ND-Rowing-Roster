@@ -1,64 +1,116 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Add New Rower Profile</h2>
+<!-- Source: http://snipplicious.com/snippet/19/edit-profile-page -->
 
-<form action("{{ url_for('addRower')}}" method = 'POST' enctype='multipart/form-data')>
-
-<table border="1", style="width:75%">
-  
-  <tr>
-  	<td align="center" width="15%" rowspan="9"><img src="{{ url_for('static',
-              filename='images/avatar_missing_lg.png')}}" alt="Smiley face" width="100%"><input type='file' name='photo' accept="image/*"><br> 300KB or less please<br>Ideal crop ratio: 100:125</td>
-  <tr>
-    <td>First Name:</td><td><input type='text' size='30' name='fname' placeholder='Johnny'></td></tr>
-  <tr>
-    <td>Last Name:</td><td><input type='text' size='30' name='lname' placeholder='Awesome'></td></tr>
-  <tr>
-    <td>Graduation Year:</td> <td><input type='text' size='6' name='gyear' placeholder='2030'></td></tr>
-  <tr>
-    <td>Team:</td><td><input type='radio' name='team' value="mens"> Men's <input type='radio' name='team' value="womens"> Women's</td></tr>
-  
-  <!-- !!! below need to add max(seasons.id) and season.name for the same -->
-  
-  <tr>
-    <td>Register for this Season?:</td>
-    <td><input type='hidden' name='rower_seasons' value='0' />
-        <label><input type='checkbox' name='rower_seasons' value='1' checked/>
-        {{currentseason.name}}
-    </td></tr>
-  <tr>
-    <td>Seasons of Experience:</td><td><input type='text' size='6' name='experience' placeholder='4'></td></tr>
-  <tr>
-    <td>Mother's name:</td><td><input type='text' size='30' name='mother' placeholder='Cathy'></td></tr>
-  <tr>     
-    <td>Father's name:</td><td><input type='text' size='30' name='father' placeholder='Chris'></td></tr>
-</table>
-
-<br><br>
-
-</table>
-
-<table border="1", style="width:75%">
-<caption> Regattas History (check the appropriate regattas rowed</caption>
-{% for s in seasons %}
-<tr><td colspan="2" align="center"><strong>{{s.description}}</stong></td></tr>
-
-<!-- !!! add below a date restriction so date is less than today's date -->
-
-{% for r in regattas if r.season_id == s.id %}
-<tr><td><input type='checkbox' name='rower_regattas' value='{{r.id}}'> {{r.name}}</td><td>{{r.date}}</td></tr>
-{% endfor %}
-{% endfor %}
-</table>
-<p><input type='submit' value='Submit'>   <a href={{ url_for('mainPage') }}>Cancel</a></p>
-
+<h1 class="page-header">New Rower Profile:</h1>
+<form class="form-compact" role="form" action="{{ url_for('addRower')}}" method = 'POST' enctype='multipart/form-data'>
+  <div class="row">
+    <!-- left column -->
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="text-center">
+        <img src="{{ url_for('static',
+              filename='images/avatar_missing_lg.png')}}" class="avatar img-rounded img-thumbnail" alt="avatar" width="75%">
+        <h6>Upload a different photo...</h6>
+        <input type="file" name='photo' class="text-center center-block well well-sm">
+      </div>
+    </div>
+    <!-- edit form column -->
+    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+      <div class="alert alert-info alert-dismissable">
+        <a class="panel-close close" data-dismiss="alert">×</a> 
+        <i class="fa fa-coffee"></i>
+        This is an <strong>.alert</strong>. Use this to show important messages to the user.
+      </div>
+      <h3>Personal info</h3>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">First name:</label>
+        <div class="col-lg-8">
+          <input class="form-control" name='fname' placeholder='Johnny' type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">Last name:</label>
+        <div class="col-lg-8">
+          <input class="form-control" name='lname' placeholder='Awesome' type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">Team for {{currentseason.name}}:</label>
+        <div class="col-lg-8">
+          <div class="form-control">
+            <input type='radio' name='team' value="mens" checked >
+              Men's 
+            <input type='radio' name='team' value="womens"> 
+              Women's
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">Register for {{ currentseason.name }}:</label>
+        <div class="col-lg-8">
+          <div class="form-control">
+            <input type='hidden' name='rower_seasons' value='0' />
+            <input type='checkbox' name='rower_seasons' value='1' checked/>
+                {{ currentseason.name }}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">Graduation Year:</label>
+        <div class="col-lg-8">
+          <input class="form-control" name='gyear' placeholder='2030' type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">Seasons Experience:</label>
+        <div class="col-lg-8">
+          <input class="form-control" name='experience' placeholder='4' type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">Mother's Name:</label>
+        <div class="col-lg-8">
+          <input class="form-control" name='mother' placeholder='Cathy' type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-3 control-label">Father's Name:</label>
+        <div class="col-lg-8">
+          <input class="form-control" name='father' placeholder='Big John' type="text">
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- New Row for regatta info -->
+  <div class = "row">
+    <div class="panel panel-default", style="margin:40px">
+      <table class="table table-hover" >
+        <caption> <h3>Regattas History</h3></caption>
+        <!-- for s in rowerhistoryseasons -->
+        {% for s in seasons %}
+          <tr><td colspan="2" align="center"><h5>{{s.description}}</h5></td></tr>
+          {% for r in regattas if r.season_id == s.id %}
+            <tr>
+              <td><input type='checkbox' name='rower_regattas' value='{{r.id}}'>
+                  {{r.name}}</td>
+              <td>{{r.date.strftime('%a, %B %d, %Y')}}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </table>
+      
+    </div>
+      <div class='form-group' style="margin:40px">
+        <div class="control-label col-xs-2">
+          <button type="submit" value='Submit Edits' class="btn btn-primary">Submit</button>
+          <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+        </div>
+      </div>
+  </div>
 </form>
+
+
 
 {% endblock %}

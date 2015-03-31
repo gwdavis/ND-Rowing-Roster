@@ -1,28 +1,36 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
-<h2>DELETE Existing Season: {{season.name}}</h2>
+<h2>Delete Existing Season:<br><small> {{season.name}}</small></h2>
 
-<form action="{{ url_for('deleteSeasonConfirmation', season_id=season.id)}}" method = 'post'>
-<h2>Are you sure you wish to delete this season?  All regatta data associated with this season will be deleted.</h2>
-
-	<dl>
-		<dt>Season Name:</dt>
-			<dd>{{season.name}}</dd>
-		<dt>Short Name:</dt>
-			<dd>{{season.short}}</dd>
-		<dt>Description:</dt>
-			<dd>{{season.description}}</dd>
-	</dl>
-
-	<input type='submit' value='Confirm Delete'>  <a href='{{ url_for('editSeason', season_id=season.id)}}'>Cancel</a>
-
+<form class="form-horizontal" action="{{ url_for('deleteSeasonConfirmation', season_id=season.id)}}" method = 'post'>
+  <div class='form-group'>
+    <label for="inputName" class="control-label col-xs-2">Season Name:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputName" name='name' value='{{season.name}}' disabled="">
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputShort" class="control-label col-xs-2">Short Name:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputShort" name='short' value='{{season.short}}' disabled="">
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputDescr" class="control-label col-xs-2">Description:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputDescr" name='description' value='{{season.description}}' disabled="">
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <button type="submit" value='Confirm Delete' class="btn btn-danger">Confirm Delete</button>
+      <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+    </div>
+    <div class="col-xs-10">
+      <font size="3.5em"><strong>Are you sure you wish to delete this season?  All regatta data associated with this season will be deleted.</strong></font>
+    </div>
+  </div>
 </form>
 
 {% endblock %}

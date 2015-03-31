@@ -7,25 +7,51 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>DELETE Existing Regatta:  {{regatta.name}}</h2>
 
-<h2>Are you sure you wish to delete this regatta?  </h2>
 
-<form action="{{ url_for('deleteRegattaConfirmation', regatta_id=regatta.id)}}" method = 'post'>
+<h2>Delete Existing Regatta:  <br><small>{{regatta.season.name}}<br>{{regatta.name}}</small></h2>
 
-	<dl>
-		<dt>Season:</dt>
-			<dd>{{regatta.season_name}}	
-		<dt>Regatta Name:</dt>
-			<dd>{{regatta.name}}</dd>
-		<dt>Date:</dt>
-			<dd>{{regatta.date.strftime('%a, %B %d, %Y')}}</dd>
-		<dt>Link to regatta website:</dt>
-			<dd>{{regatta.weblink}}</dd>
-		<dt>Description:</dt>
-			<dd>{{regatta.description}}</dd>
-	</dl>
-
-	<input type='submit' value='Confirm Delete'>  <a href='{{ url_for('showRegatta', regatta_id=regatta.id)}}'>Cancel</a>
+<form class="form-horizontal" action="{{ url_for('deleteRegattaConfirmation', regatta_id=regatta.id)}}" method = 'get'>
+	<div class='form-group'>
+    <label for="inputSeason" class="control-label col-xs-2">Season:</label>
+    <div class="col-xs-10">
+    	<input type='text' class="form-control" id="inputSeason" name='season_id' value='{{regatta.season.name}}' disabled="">
+    </div>
+  </div>
+	<div class='form-group'>
+    <label for="inputName" class="control-label col-xs-2">Regatta Name:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputName" name='name' value='{{regatta.name}}' disabled="">
+    </div>
+  </div>
+	<div class='form-group'>
+    <label for="inputDate" class="control-label col-xs-2">Date:</label>
+    <div class="col-xs-10">
+    	<!-- using the %Y-%m-%d from to be compatible with browsers that support the type=date format for pop-up calendar input -->
+      <input type=date class="form-control" id="inputDate" name='date' value={{regatta.date.strftime('%Y-%m-%d')}} disabled="">
+    </div>
+  </div>	
+	<div class='form-group'>
+    <label for="inputLink" class="control-label col-xs-2">Link to regatta website:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputLink" name='weblink' value='{{regatta.weblink}}' disabled="">
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputDescr" class="control-label col-xs-2">Description:</label>
+    <div class="col-xs-10">
+      <input type='text' class="form-control" id="inputDescr" name='description' value='{{regatta.description}}' disabled="">
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <button type="submit" value='Confirm Delete' class="btn btn-danger">Confirm Delete</button>
+      <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+    </div>
+    <div class="col-xs-10">
+      <font size="3.5em"><strong>Are you sure you wish to delete this regatta?</strong></font>
+    </div>
+  </div>
+</form>
 
 {% endblock %}
