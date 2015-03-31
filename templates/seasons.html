@@ -1,39 +1,32 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
 
-<h2>Registered Seasons</h2>
-
-<p><a href='{{url_for('addSeason')}}'>add</a></p>
+<h2 pheader>Registered Seasons</h2>
 
 
-<table border="1", style="width:75%">
-<caption>Seasons</caption>
-<tr>
-  <th>ID</th>
-  <th>Season Name</th>
-  <th>Short Name</th>
-  <th>Description</th>
-</tr>
-{% for s in seasons %}
-<tr>
-  <td>{{s.id}}</td>
-  <td><a href='{{url_for('editSeason', season_id=s.id)}}'>{{s.name}}</a></td>
-  <td>{{s.short}}</td>
-  <td>{{s.description}}</td>
-</tr>
-{% for r in regattas if r.season_id == s.id %}
-<tr><td>{{r.name}}</td><td>{{r.date}}</td></tr>
-{% endfor %}
-{% endfor %}
-</table>
+<div class="panel panel-default", style="width:75%">
+  <table class="table table-hover">
+    <tr>
+      <th>ID</th>
+      <th>Season Name</th>
+      <th>Short Name</th>
+      <th>Description</th>
+    </tr>
+    {% for s in seasons %}
+    <tr>
+      <td>{{s.id}}</td>
+      <td><a href='{{url_for('editSeason', season_id=s.id)}}'>{{s.name}}</a></td>
+      <td>{{s.short}}</td>
+      <td>{{s.description}}</td>
+    </tr>
+    {% for r in regattas if r.season_id == s.id %}
+    <tr><td>{{r.name}}</td><td>{{r.date}}</td></tr>
+    {% endfor %}
+    {% endfor %}
+  </table>
+</div>
 
-
+<p><a href='{{url_for('addSeason')}}'><button type="button" class="btn btn-primary">Add New</button></a></p>
 
 {% endblock %}

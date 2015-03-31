@@ -1,42 +1,42 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
 
 {% if team_id == 'womens' %}
-	<h2>{{season.name}} Roster: Women's Crew</h2>
+	<h2>{{season.name}} Roster: </h2>
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Women's Crew</h4></div>
+
 {% elif team_id =='mens' %}
-	<h2>{{season.name}} Roster: Men's Crew</h2>
-{% else %}
-	<h2>Houston, we have a problem with the team_id parameter</h2>
+	<h2>{{season.name}} Roster:</h2>
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Men's Crew</h4></div>
 {% endif %}
 
-<p><a href='{{url_for('addRower')}}'>Add Rower</a></p>
+      <table class="table table-hover">
+        <tr>
+          <th>Photo</th>
+          <th>Name</th>
+          <th>Grad Year</th>
+          <th>Experience</th>
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+        {% for r in teamroster.rower %}
+        
+        <tr>
+        	<td><img src="{{ url_for('static',
+                       filename='images/' + r.photo)}}" alt={{r.lname}} height="75"></td>
+          <td><a href='{{url_for('showRower',rower_id=r.id)}}'>{{r.fname}} {{r.lname}}</a></td>
+          <td>{{r.gyear}}</td>
+          <td>{{r.experience}}</td>
+          <td>{{r.mother}}</td>
+          <td>{{r.father}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
 
-<table>
-  <tr>
-    <th>Photo</th>
-    <th>Name</th>
-    <th>Grad Year</th>
-    <th>Experience</th>
-    <th>Mother</th>
-    <th>Father</th>
-  </tr>
-  {% for r in teamroster.rower %}
-  
-  <tr>
-  	<td><img src="{{ url_for('static',
-                 filename='images/' + r.photo)}}" alt={{r.lname}} height="75"></td>
-    <td><a href='{{url_for('showRower',rower_id=r.id)}}'>{{r.fname}} {{r.lname}}</a></td>
-    <td>{{r.gyear}}</td>
-    <td>{{r.experience}}</td>
-    <td>{{r.mother}}</td>
-    <td>{{r.father}}</td>
-  </tr>
-  {% endfor %}
+<p><a href='{{url_for('addRower')}}'><button type="button" class="btn btn-primary">Add rower</button></a></p>
+
 
 {% endblock %}

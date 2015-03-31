@@ -1,46 +1,96 @@
-<!-- Rowing Roster v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
- v0.1 adds:   1)Routing
-                2)Templates and Forms
-                3)CRUD Functionality
- March 2015 by Gary Davis -->
-
 {% extends "base.html" %}
 {% block content %}
+<!-- Source: http://snipplicious.com/snippet/19/edit-profile-page -->
 
-<h2>Rower Profile: {{rower.fname}} {{rower.lname}}</h2>
+  <h1 class="page-header">Profile: {{rower.fname}} {{rower.lname}}</h1>
+  <div class="row">
+    <!-- left column -->
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="text-center">
+        <img src="{{ url_for('static',
+              filename='images/' + rower.photo)}}" class="avatar img-rounded img-thumbnail" alt="avatar" width="75%">
+        <h6>Upload a different photo...</h6>
+        <input type="file" class="text-center center-block well well-sm" disabled="">
+      </div>
+    </div>
+    <!-- edit form column -->
+    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+      <div class="alert alert-info alert-dismissable">
+        <a class="panel-close close" data-dismiss="alert">×</a> 
+        <i class="fa fa-coffee"></i>
+        This is an <strong>.alert</strong>. Use this to show important messages to the user.
+      </div>
+      <h3>Personal info</h3>
+      <form class="form-compact" role="form">
+        <div class="form-group">
+          <label class="col-lg-3 control-label">First name:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{rower.fname}}" type="text" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Last name:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{rower.lname}}" type="text" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Team for {{currentseason.name}}:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{currentteam.name}}" type="text" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Graduation Year:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{rower.gyear}}" type="text" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Seasons Experience:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{rower.experience}}" type="text" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Mother's Name:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{rower.mother}}" type="text" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Father's Name:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{rower.father}}" type="text" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-3 control-label"></label>
+          <div class="col-md-8">
+            <a class="btn btn-primary" href="{{url_for('editRower', rower_id=rower.id)}}" role="button">Edit</a>
+            <span></span>
+            <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class = "row" style="padding-top: 40px;">
+    <div class="panel panel-default", style="margin:40px">
+      <table class="table table-hover" >
+        <caption> <h3>Regattas History</h3></caption>
+        <!-- for s in rowerhistoryseasons -->
+        {% for s in rower.season %}
+          <tr><td colspan="2" align="center"><h5>{{s.name}}</h5></td></tr>
+          {% for r in rower.regatta if r.season_id == s.id %}
+            <tr><td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td><td>{{r.date.strftime('%a, %B %d, %Y')}}</td></tr>
+          {% endfor %}
+        {% endfor %}
+      </table>
+    </div>
+  </div>
 
-
-<table border="0", style="width:50%">
   
-  <tr>
-  	<td align="center" width="40%" rowspan="8"><img src="{{ url_for('static',
-              filename='images/' + rower.photo)}}" alt="Smiley face" width="100%"></td>
-    <td colspan="2"><strong>{{rower.fname}} {{rower.lname}}</strong></td>
-  <tr>
-    <td>Graduation Year:</td> <td>{{rower.gyear}}</td></tr>
-  <tr>
-    <td>Team for {{currentseason.name}}</td><td>{{currentteam.name}}</td></tr>
-  <tr>
-    <td>Seasons of Experience:</td><td>{{rower.experience}}</td></tr>
-  <tr>
-    <td>Mother's name:</td><td>{{rower.mother}}</td></tr>
-  <tr>     
-    <td>Father's name:</td><td>{{rower.father}}</td></tr>
-  <tr><td></td></tr>
-</table>
-<br><br>
-<table border="1", style="width:50%">
-<caption> Regattas History</caption>
-<!-- for s in rowerhistoryseasons -->
-{% for s in rower.season %}
-<tr><td colspan="2" align="center"><strong>{{s.name}}</stong></td></tr>
-{% for r in rower.regatta if r.season_id == s.id %}
-<tr><td><a href='{{url_for('showRegatta',regatta_id=r.id)}}'>{{r.name}}</a></td><td>{{r.date.strftime('%a, %B %d, %Y')}}</td></tr>
-{% endfor %}
-{% endfor %}
-</table>
 
-<!--will need to adjust currentteam[0] when more teams are active, i.e. if more than one team offer a selction -->
-<p><a href="{{url_for('editRower', rower_id=rower.id)}}">Edit</a>  <a href="{{url_for('showRoster', season_id=currentseason.id, team_id = currentteam.id)}}">Cancel</a></p>
 
 {% endblock %}

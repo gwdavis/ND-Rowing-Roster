@@ -8,22 +8,38 @@
 {% block content %}
 
 
-<h2>Edit Existing Season: {{season.name}}</h2>
+<h2>Edit Existing Season: <br>{{season.name}}</h2>
 
-<form action="{{ url_for('editSeason', season_id=season.id)}}" method = 'post'>
-
-	<dl>
-		<dt>Season Name:</dt>
-			<dd><input type ='text' size='30' name='name' value='{{season.name}}'></dd>
-		<dt>Short Name:</dt>
-			<dd><input type ='text' size='5' name='short' value='{{season.short}}'></dd>
-		<dt>Description:</dt>
-			<dd><input type ='text' size='30' name='description' value='{{season.description}}'></dd>
-	</dl>
-
-	<input type='submit' value='Submit Changes'> <a href='{{url_for('showSeasons')}}'>Cancel</a>
-	<p><a href='{{url_for('deleteSeasonConfirmation', season_id=season.id)}}'>Delete Season</a></p>
-
+<form class="form-horizontal" action="{{ url_for('editSeason', season_id=season.id)}}" method = 'post'>
+  <div class='form-group'>
+    <label for="inputName" class="control-label col-xs-2">Season Name:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputName" name='name' value='{{season.name}}' required>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputShort" class="control-label col-xs-2">Short Name:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputShort" name='short' value='{{season.short}}' required>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label for="inputDescr" class="control-label col-xs-2">Description:</label>
+    <div class="col-xs-10">
+      <input type ='text' class="form-control" id="inputDescr" name='description' value='{{season.description}}' required>
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <button type="submit" value='Submit Changes' class="btn btn-primary">Submit</button>
+      <a class="btn btn-default" onclick="goBack()" role="button">Cancel</a>
+    </div>
+  </div>
+  <div class='form-group'>
+    <div class="control-label col-xs-2">
+      <a class="btn btn-warning" href="{{url_for('deleteSeasonConfirmation', season_id=season.id)}}" role="button">Delete</a>
+    </div>
+  </div>
 </form>
 
 {% endblock %}
