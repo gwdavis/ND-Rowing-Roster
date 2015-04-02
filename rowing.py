@@ -1,4 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, send_file
+from flask import Flask, render_template, request, redirect, url_for, jsonify,\
+     flash, send_file
+from flask.ext.login import LoginManager, login_user, logout_user,\
+    current_user
+from oauth import OAuthSignIn
+from database_setup import User
+from db_helper import session
 
 import os
 import db_helper
@@ -7,6 +13,21 @@ import csv
 
 
 app = Flask(__name__)
+lm = LoginManager(app)
+lm.login_view = 'login'
+
+app.secret_key = 'super_secret_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+app.config['OAUTH_CREDENTIALS'] = {
+    'facebook': {
+        'id': '1421262574842214',
+        'secret': '9183d54c95507f72c0eb93c80fcc5ef9'
+    },
+    'twitter': {
+        'id': 'wyU92Xm6svPoSEwDO6gJsW2ZY',
+        'secret': 'y33yWQSZtKY2qzl2EmqKuu4FLM2jHh7c4rAPCe1wHFs88gp2qw'
+    }
+}
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -14,11 +35,61 @@ UPLOAD_FOLDER = dir_path + '/static/images/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+@lm.user_loader
+def load_user(id):
+    return db_helper.get_user_id(id)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(redirect_url())
+
+
+@app.route('/authorize/<provider>')
+def oauth_authorize(provider):
+    if not current_user.is_anonymous():
+        return redirect(url_for('login'))
+    oauth = OAuthSignIn.get_provider(provider)
+    return oauth.authorize()
+
+
+@app.route('/callback/<provider>')
+def oauth_callback(provider):
+    if not current_user.is_anonymous():
+        return redirect(url_for('login'))
+    oauth = OAuthSignIn.get_provider(provider)
+    social_id, username, email = oauth.callback()
+    if social_id is None:
+        flash('Authentication failed.')
+        return redirect(url_for('login'))
+    user = session.query(User).filter_by(social_id=social_id).first()
+    if not user:
+        user = User(social_id=social_id, nickname=username, email=email)
+        session.add(user)
+        session.commit()
+    login_user(user, True)
+    return redirect(url_for('login'))
+
+
 # This will be another page so for the time being we will redirect
 @app.route('/')
 def mainPage():
     return redirect(url_for('seasonSummary',
                             season_id=db_helper.get_current_season().id))
+
+
+@app.route('/login/')
+def login():
+    return redirect(redirect_url())
+
+
+# Source: http://stackoverflow.com/questions/14277067/redirect-back-in-flask
+def redirect_url(default='index'):
+    '''Helper function to return to referring URL'''
+    return request.args.get('next') or \
+        request.referrer or \
+        url_for('mainPage')
 
 
 # Show current season regattas and links to rosters
@@ -35,6 +106,9 @@ def seasonSummary(season_id):
 @app.route('/admin/')
 def dashboard():
     """Handler for admin dashboard page"""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access the dashboard")
+        return redirect(url_for('mainPage'))
     season = db_helper.get_current_season()
     return render_template('dashboard.html', season=season)
 
@@ -59,6 +133,9 @@ def showSeasons():
 @app.route('/season/new/', methods=['GET', 'POST'])
 def addSeason():
     """Display html dashboard page to register a new season."""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     if request.method == 'POST':
         db_helper.add_new_season(request.form)
         flash("You've successfully added a season")
@@ -71,6 +148,9 @@ def addSeason():
 def editSeason(season_id):
     """Display html dashboard page to edit an already registered season
     Argument:   season id"""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     if request.method == 'POST':
         db_helper.update_season(season_id, request.form)
         flash("You've successfully edited a season")
@@ -86,6 +166,9 @@ def deleteSeasonConfirmation(season_id):
     season. Care must be taken as that will orphan regattas and remove
     rowers from teams from that particular season.
     args:   season_id"""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     if request.method == 'POST':
         db_helper.remove_season(season_id)
         flash("You've successfully DELETED a season")
@@ -114,6 +197,9 @@ def showRegatta(regatta_id):
 @app.route('/regatta/new/', methods=['GET', 'POST'])
 def addRegatta():
     """Display html dashboard page to add a new regatta."""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     seasons = db_helper.get_all_seasons()
     if request.method == 'POST':
         db_helper.add_new_regatta(request.form)
@@ -127,6 +213,9 @@ def addRegatta():
 def editRegatta(regatta_id):
     """Display html dashboard page to edit an existing regatta.
     argument:   regatta id"""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     if request.method == 'POST':
         db_helper.update_regatta(regatta_id)
         flash("You've successfully edited a regatta")
@@ -144,6 +233,9 @@ def deleteRegattaConfirmation(regatta_id):
     regatta.  Use care as deleting a regatta will remove that regatta
     form list of regatta's rowed for each rower.
     argument regatta id"""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     if request.method == 'POST':
         db_helper.remove_regatta(regatta_id)
         flash("You've successfully DELETED a regatta")
@@ -167,6 +259,9 @@ def showRower(rower_id):
 @app.route('/rower/<rower_id>/edit/', methods=['GET', 'POST'])
 def editRower(rower_id):
     """Display html dashboard page to edit an existing rower."""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     if request.method == 'POST':
         db_helper.update_rower(rower_id, request.form,
                                request.files, UPLOAD_FOLDER)
@@ -189,28 +284,38 @@ def editRower(rower_id):
 
 @app.route('/rower/new/', methods=['GET', 'POST'])
 def addRower():
-    """Display html dashboard page to add a new rower"""
-    # !!! need to fill out once done with edit....
+    """Display html dashboard page to add a new rower to DB"""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     current_season = db_helper.get_current_season()
     print current_season.name
     if request.method == 'POST':
-        rower = db_helper.add_new_rower(request.form, request.files, UPLOAD_FOLDER)
+        # a bit of a kluge...  adds new rower to db and returns
+        # the rower team ID... I could not get it to return the
+        # rower with an id which would have been more general
+        rower_team_id = db_helper.add_new_rower(request.form,
+                                                request.files,
+                                                UPLOAD_FOLDER)
         flash("You've successfully added a rower")
         return redirect(url_for('showRoster',
                                 season_id=current_season.id,
-                                team_id='womens'))
+                                team_id=rower_team_id))
     else:
         seasons = db_helper.get_all_seasons()
         regattas = db_helper.get_all_regattas()
         return render_template('addrower.html',
-                           seasons=seasons,
-                           currentseason=current_season,
-                           regattas=regattas)
+                               seasons=seasons,
+                               currentseason=current_season,
+                               regattas=regattas)
 
 
 @app.route('/rower/<rower_id>/delete/', methods=['GET', 'POST'])
 def deleteRowerConfirmation(rower_id):
     """Display html dashboard sub-page confirming deletion of a rower."""
+    if not current_user.is_authenticated():
+        flash("Administration access is required to access this page")
+        return redirect(url_for('mainPage'))
     current_season = db_helper.get_current_season()
     current_team = db_helper.get_teams_for_rower_id_and_season_id(
                    rower_id=rower_id, season_id=current_season.id)
@@ -338,7 +443,8 @@ def download_regattas():
     return send_file(csvfile, attachment_filename='regattas.csv', as_attachment=True)
 
 
+
+
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)

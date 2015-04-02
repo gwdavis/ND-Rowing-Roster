@@ -5,6 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import create_engine
 
+from flask.ext.login import UserMixin
+
 Base = declarative_base()
 
 
@@ -133,6 +135,16 @@ class RowerRegattas(Base):
     id = Column(Integer, primary_key=True)
     regatta_id = Column(Integer, ForeignKey('regattas.id'), nullable=False)
     rower_id = Column(String, ForeignKey('rowers.id'), nullable=False)
+
+
+# Oauth User Table
+# Source: http://blog.miguelgrinberg.com/post/oauth-authentication-with-flask
+class User(UserMixin, Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    social_id = Column(String(64), nullable=False, unique=True)
+    nickname = Column(String(64), nullable=False)
+    email = Column(String(64), nullable=True)
 
 
 engine = create_engine('sqlite:///rowingteam.db')
