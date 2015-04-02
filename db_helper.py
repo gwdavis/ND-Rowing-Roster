@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine  # , desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Regattas, Seasons, Rowers, Teams,\
-                           RowerRegattas, RowerTeams, Base
+                           RowerRegattas, RowerTeams, Base, User
 
 import os
 import sys
@@ -115,7 +115,8 @@ def get_first(iterable, default=None):
 
 def get_teams_for_rower_id_and_season_id(rower_id, season_id):
     """Get team object for a given rower ID and season ID.
-    If there are more than one team, it only picks the first"""
+    If there are more than one team, it only picks the first
+    !!! Currently season_id is not implemented"""
     rower = get_rower_from_rower_id(rower_id)
     current_team = get_first(rower.team)
     return current_team
@@ -202,7 +203,7 @@ def remove_regatta(regatta_id):
 
 
 def add_new_rower(form, files, image_folder):
-    """Add new rower in DB"""
+    """Add new rower in DB and return team ID"""
     print image_folder
     new_rower = Rowers(fname=form['fname'],
                        lname=form['lname'],
@@ -222,6 +223,8 @@ def add_new_rower(form, files, image_folder):
         add_regatta_to_rower(new_rower, nr)
     session.add(new_rower)
     session.commit
+    team = get_first(new_rower.team)
+    return team.id
 
 
 def update_rower(rower_id, form, files, image_folder):
@@ -337,3 +340,7 @@ def remove_season_from_rower(rower, season_id):
         if season.id == season_id:
             rower.season.remove(season)
     return
+
+
+def get_user_id(id):
+    return session.query(User).get(int(id))

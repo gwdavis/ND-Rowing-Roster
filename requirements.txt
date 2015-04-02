@@ -1,0 +1,3 @@
+Flask-Login==0.2.11
+rauth==0.7.0
+

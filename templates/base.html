@@ -9,22 +9,37 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <!-- !!! can't get style.css or custom.css to work -->
     <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}"> -->
+    <!-- http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_his_back -->
+    <!-- add previous page capability -->
+    <script>
+      function goBack() {
+          window.history.back();
+      }
+    </script>
   </head>
   <body>
-  <!-- http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_his_back -->
-  <script>
-    function goBack() {
-        window.history.back();
-    }
-  </script>
   <div class="container-fluid">
     <header class='page.header'>
-      <div><h1>Northeastern Crew:</h1>                
+      <div><h1>Northeastern Crew:</h1>
+          <!-- Bootstap nav bar -->              
           <ul class="nav nav-tabs" role="tablist">
             <li><a href="{{ url_for('mainPage') }}">Home</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Admin</a></li>        
+            <li><a href="{{ url_for('dashboard') }}">Admin</a></li>
+            <li><a href="{{ url_for('login')}}">Login</a></li>       
+            <!-- login/logout using facebook - not perfect css-->
+            {% if current_user.is_authenticated() %}
+              <li class="nav navbar-right"><a href="{{url_for('logout')}}" class="btn btn-danger navbar-btn">
+                Logout
+              </a></li>
+            {% else %}
+            <!-- or Twitter <a href="{{ url_for('oauth_authorize', provider='twitter') }}">Login with Twitter</a> -->
+            <!-- button source: https://github.com/allanbreyes/mooc-catalog/blob/master/templates/application.html -->
+              <li class="nav navbar-right"><a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-success navbar-btn">
+                Login
+              </a></li>
+            {% endif %}
           </ul>
-  	  </div>
+      </div>
     </header>
     <section>
       <div class = 'pane'>
