@@ -134,8 +134,8 @@ def showSeasons():
 def addSeason():
     """Display html dashboard page to register a new season."""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login is required to access this page")
+        return redirect(redirect_url())
     if request.method == 'POST':
         db_helper.add_new_season(request.form)
         flash("You've successfully added a season")
@@ -149,8 +149,8 @@ def editSeason(season_id):
     """Display html dashboard page to edit an already registered season
     Argument:   season id"""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login is required to access this page")
+        return redirect(redirect_url())
     if request.method == 'POST':
         db_helper.update_season(season_id, request.form)
         flash("You've successfully edited a season")
@@ -167,8 +167,8 @@ def deleteSeasonConfirmation(season_id):
     rowers from teams from that particular season.
     args:   season_id"""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login is required to access this page")
+        return redirect(redirect_url())
     if request.method == 'POST':
         db_helper.remove_season(season_id)
         flash("You've successfully DELETED a season")
@@ -198,8 +198,8 @@ def showRegatta(regatta_id):
 def addRegatta():
     """Display html dashboard page to add a new regatta."""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login is required to access this page")
+        return redirect(redirect_url())
     seasons = db_helper.get_all_seasons()
     if request.method == 'POST':
         db_helper.add_new_regatta(request.form)
@@ -214,8 +214,8 @@ def editRegatta(regatta_id):
     """Display html dashboard page to edit an existing regatta.
     argument:   regatta id"""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login is required to access this page")
+        return redirect(redirect_url())
     if request.method == 'POST':
         db_helper.update_regatta(regatta_id)
         flash("You've successfully edited a regatta")
@@ -234,8 +234,8 @@ def deleteRegattaConfirmation(regatta_id):
     form list of regatta's rowed for each rower.
     argument regatta id"""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login is required to delete a regatta")
+        return redirect(redirect_url())
     if request.method == 'POST':
         db_helper.remove_regatta(regatta_id)
         flash("You've successfully DELETED a regatta")
@@ -260,8 +260,8 @@ def showRower(rower_id):
 def editRower(rower_id):
     """Display html dashboard page to edit an existing rower."""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login is required to access this page")
+        return redirect(redirect_url())
     if request.method == 'POST':
         db_helper.update_rower(rower_id, request.form,
                                request.files, UPLOAD_FOLDER)
@@ -286,8 +286,8 @@ def editRower(rower_id):
 def addRower():
     """Display html dashboard page to add a new rower to DB"""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login required to access this page")
+        return redirect(redirect_url())
     current_season = db_helper.get_current_season()
     print current_season.name
     if request.method == 'POST':
@@ -314,8 +314,8 @@ def addRower():
 def deleteRowerConfirmation(rower_id):
     """Display html dashboard sub-page confirming deletion of a rower."""
     if not current_user.is_authenticated():
-        flash("Administration access is required to access this page")
-        return redirect(url_for('mainPage'))
+        flash("Login required to delete rower")
+        return redirect(redirect_url())
     current_season = db_helper.get_current_season()
     current_team = db_helper.get_teams_for_rower_id_and_season_id(
                    rower_id=rower_id, season_id=current_season.id)
