@@ -24,8 +24,7 @@
           <!-- Bootstap nav bar -->              
           <ul class="nav nav-tabs" role="tablist">
             <li><a href="{{ url_for('mainPage') }}">Home</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Admin</a></li>
-            <li><a href="{{ url_for('login')}}">Login</a></li>       
+            <li><a href="{{ url_for('dashboard') }}">Admin</a></li> 
             <!-- login/logout using facebook - not perfect css-->
             {% if current_user.is_authenticated() %}
               <li class="nav navbar-right"><a href="{{url_for('logout')}}" class="btn btn-danger navbar-btn">

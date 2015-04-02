@@ -2,10 +2,11 @@
 {% block content %}
 <!-- Source: http://snipplicious.com/snippet/19/edit-profile-page -->
 
-  <h1 class="page-header">Profile: {{rower.fname}} {{rower.lname}}</h1>
+  
   <div class="row">
     <!-- left column -->
     <div class="col-md-4 col-sm-6 col-xs-12">
+      <h1 class="text-center page-header">{{rower.fname}} {{rower.lname}}</h1>
       <div class="text-center">
         <img src="{{ url_for('static',
               filename='images/' + rower.photo)}}" class="avatar img-rounded img-thumbnail" alt="avatar" width="75%">
@@ -14,26 +15,14 @@
       </div>
     </div>
     <!-- edit form column -->
-    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
-      <div class="alert alert-info alert-dismissable">
+    <div class="col-md-8 col-sm-6 col-xs-12 personal-info" style="padding-top: 30px;">
+      <!-- <div class="alert alert-info alert-dismissable">
         <a class="panel-close close" data-dismiss="alert">×</a> 
         <i class="fa fa-coffee"></i>
         This is an <strong>.alert</strong>. Use this to show important messages to the user.
-      </div>
-      <h3>Personal info</h3>
+      </div> -->
+      <h3 class="text-center">Personal info</h3>
       <form class="form-compact" role="form">
-        <div class="form-group">
-          <label class="col-lg-3 control-label">First name:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="{{rower.fname}}" type="text" disabled>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Last name:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="{{rower.lname}}" type="text" disabled>
-          </div>
-        </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Team for {{currentseason.name}}:</label>
           <div class="col-lg-8">
