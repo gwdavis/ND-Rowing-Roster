@@ -3,12 +3,13 @@
 
 <!-- Source: http://snipplicious.com/snippet/19/edit-profile-page -->
 
-<h1 class="page-header">Edit Profile: {{rower.fname}} {{rower.lname}}</h1>
+
 <form class="form-compact" role="form" action="{{ url_for('editRower', rower_id=rower.id)}}" 
           method = 'POST' enctype='multipart/form-data'>
   <div class="row">
     <!-- left column -->
     <div class="col-md-4 col-sm-6 col-xs-12">
+    <h1 class="text-center">{{rower.fname}} {{rower.lname}}</h1>
       <div class="text-center">
         <img src="{{ url_for('static',
               filename='images/' + rower.photo)}}" class="avatar img-rounded img-thumbnail" alt="avatar" width="75%">
@@ -23,7 +24,7 @@
         <i class="fa fa-coffee"></i>
         This is an <strong>.alert</strong>. Use this to show important messages to the user.
       </div> -->
-      <h3>Personal info</h3>
+      <h3 class="text-center">Personal info</h3>
       <div class="form-group">
         <label class="col-lg-3 control-label">First name:</label>
         <div class="col-lg-8">
