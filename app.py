@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify,\
-     flash, send_file
+     flash, send_file, abort
 # For OAuth
 from flask.ext.login import LoginManager, login_user, logout_user,\
     current_user
 from oauth import OAuthSignIn
+from flask_wtf.csrf import CsrfProtect
 
 import os
 import db_helper
@@ -14,6 +15,12 @@ import csv
 app = Flask(__name__)
 lm = LoginManager(app)
 lm.login_view = 'login'
+# Provide global csrf token to Jinja
+# Source: http://flask-wtf.readthedocs.org/en/latest/csrf.html
+# Alt Source: http://stackoverflow.com/questions/26535809/csrf-protection-\
+#                                      on-ajax-authentication-in-flask
+# Alt Source: http://flask.pocoo.org/snippets/3/
+CsrfProtect(app)
 
 app.secret_key = 'super_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -32,6 +39,10 @@ path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 UPLOAD_FOLDER = dir_path + '/static/images/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+   
+
 
 
 @lm.user_loader

@@ -5,6 +5,7 @@
 <h2>Edit Existing Season: <br>{{season.name}}</h2>
 
 <form class="form-horizontal" action="{{ url_for('editSeason', season_id=season.id)}}" method = 'post'>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
   <div class='form-group'>
     <label for="inputName" class="control-label col-xs-2">Season Name:</label>
     <div class="col-xs-10">

@@ -218,6 +218,8 @@ def add_new_rower(form, files, image_folder):
         add_regatta_to_rower(new_rower, nr)
     session.add(new_rower)
     session.commit
+    # can't seem to get the rower id even after a commit
+    # so settle for getting the team id.
     team = get_first(new_rower.team)
     return team.id
 

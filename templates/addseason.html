@@ -5,6 +5,7 @@
 
 
 <form class="form-horizontal" action="{{ url_for('addSeason')}}" method = 'post'>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
   <div class='form-group'>
     <label for="inputName" class="control-label col-xs-2">Season Name:</label>
     <div class="col-xs-10">
