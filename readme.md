@@ -4,7 +4,14 @@
 April 2015 by Gary Davis
 
 ###Description:
-Rowing Roster provides team rosters, rowing profiles, regatta schedules and a record of regatta attendance.  The program was developed as part of a Udacity Full-Stack Nano-Degree program to explore database object relational mapping ("ORM"), "CRUD" (create, read, update, delete), RESTful design, OAuth login and some light styling.  
+Rowing Roster provides team rosters, rowing profiles, regatta schedules and a record of regatta attendance.  The program was developed as part of a Udacity Full-Stack Nano-Degree program to explore database object relational mapping ("ORM"), "CRUD" (create, read, update, delete), RESTful design, OAuth login and some light styling.
+
+###Live Demo Site:
+A live demo site can be seen on Heroku [here](http://cryptic-woodland-5962.herokuapp.com/admin/)
+There is a bug that you will notice when you try to authorize through Facebook but a refresh will allow you to keep going.  Also the Heroku install included the Gunicorn web server (pip install gunicorn) and a file named Procfile containing::
+```
+web: gunicorn app:app --log-file -
+```
 
 ###Requirements:
 * virtualenv or a virtual machine
@@ -123,6 +130,7 @@ In addition to Udacity materials, I found the following information helpful:
 
 ###Possible Future Enhancements
 
+* Fix OAuth bug on Heroku deployment
 * Add favicon
 * Add a login page to chose between Google, Facebook or Twitter authentication
 * Add seasons, so that views can be for a current or prior season

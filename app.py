@@ -19,8 +19,8 @@ app.secret_key = 'super_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['OAUTH_CREDENTIALS'] = {
     'facebook': {
-        'id': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-        'secret': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+        'id': '1421262574842214',
+        'secret': '9183d54c95507f72c0eb93c80fcc5ef9'
     },
     'twitter': {
         'id': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
