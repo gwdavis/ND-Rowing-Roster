@@ -7,8 +7,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Regattas, Seasons, Rowers, Teams,\
-                           RowerRegattas, RowerTeams, Base
+from database_setup import Regattas, Seasons, Rowers, Teams, Base
 import datetime
 
 engine = create_engine('sqlite:///rowingteam.db')

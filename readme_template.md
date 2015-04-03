@@ -1,20 +1,17 @@
 # NAME OF APP v0.1- a Udacity Nano-Degree Project for Full Stack Foundations
-###vo.1 adds: WHAT HAPPENS
 March 2015 by Gary Davis
 
 DESCRIPTION OF THE APP
 
-###Requirements:
-* Python
-* postgresql
-* psql 9.3.6
 
 For the Udacity Nano-Degree class, we installed a virtual machine using VirtualBox and Vagrant and pulled the necessary setup from GIT (see: https://www.udacity.com/wiki/ud197/install-vagrant)
 
 ###Files:
-* file
-* file
-* file
+* app.py
+* dp_helper.py
+* Oauth.py
+* database_setup.py
+* database_populate.py
 
 ###Installation (on a Mac OS)
 * Open Terminal on the Mac (it is found in the utilities folder or use Spotlight to search for it)
@@ -35,14 +32,22 @@ For the Udacity Nano-Degree class, we installed a virtual machine using VirtualB
 
 ###Running the program
 
-* From the command line of the virtual machine, change directory to that of the tournament files:
+* From the command line of the virtual machine, change directory to that of the rowing program files:
 ```ShellSession
-> cd /vagrant/FOLDER
+> cd /vagrant/rowing
 ```
 
+* The database can be set up and populated in sqlite:
+```>python database_setup.py
+> pytyon database_populate.py
 ```
-####Methods (i.e. Functions) included in PROGRAM FILE:
-* blahBlah():	Description
+
+* And then run the program and open a browser window to localhost:5000
+```> python app.py
+```
+
+
+
 
 
 

@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify,\
      flash, send_file
+# For OAuth
 from flask.ext.login import LoginManager, login_user, logout_user,\
     current_user
 from oauth import OAuthSignIn
-from database_setup import User
-from db_helper import session
 
 import os
 import db_helper
@@ -40,6 +39,11 @@ def load_user(id):
     return db_helper.get_user_id(id)
 
 
+@app.route('/login/')
+def login():
+    return redirect(redirect_url())
+
+
 @app.route('/logout')
 def logout():
     logout_user()
@@ -63,11 +67,9 @@ def oauth_callback(provider):
     if social_id is None:
         flash('Authentication failed.')
         return redirect(url_for('login'))
-    user = session.query(User).filter_by(social_id=social_id).first()
+    user = db_helper.get_user_for_social_ID(social_id)
     if not user:
-        user = User(social_id=social_id, nickname=username, email=email)
-        session.add(user)
-        session.commit()
+        db_helper.add_new_user(social_id, username, email)
     login_user(user, True)
     return redirect(url_for('login'))
 
@@ -79,14 +81,10 @@ def mainPage():
                             season_id=db_helper.get_current_season().id))
 
 
-@app.route('/login/')
-def login():
-    return redirect(redirect_url())
-
-
 # Source: http://stackoverflow.com/questions/14277067/redirect-back-in-flask
 def redirect_url(default='index'):
-    '''Helper function to return to referring URL'''
+    '''Helper function to return to referring URL
+    Used mainly if there is a failed authentication.'''
     return request.args.get('next') or \
         request.referrer or \
         url_for('mainPage')
@@ -95,8 +93,7 @@ def redirect_url(default='index'):
 # Show current season regattas and links to rosters
 @app.route('/<season_id>/')
 def seasonSummary(season_id):
-    """Handler for team summary page
-    args:   season id"""
+    """Handler for team summary page"""
     season = db_helper.get_season_from_season_id(season_id)
     regattas = db_helper.get_all_regattas_for_season(season_id)
     return render_template('seasonsummary.html', season=season,
@@ -105,7 +102,7 @@ def seasonSummary(season_id):
 
 @app.route('/admin/')
 def dashboard():
-    """Handler for admin dashboard page"""
+    """Handler for admin dashboard page."""
     if not current_user.is_authenticated():
         flash("Administration access is required to access the dashboard")
         return redirect(url_for('mainPage'))
@@ -115,8 +112,7 @@ def dashboard():
 
 @app.route('/<season_id>/roster/<team_id>/')
 def showRoster(season_id, team_id):
-    """Display html page showing roster for a target team and season.
-    args:   season id and team id"""
+    """Handler for team roaster page for a given target team and season."""
     season = db_helper.get_season_from_season_id(season_id)
     team_roster = db_helper.get_team_roster_for_team_id(team_id)
     return render_template('roster.html', team_id=team_id, season=season,
@@ -125,14 +121,14 @@ def showRoster(season_id, team_id):
 
 @app.route('/seasons/')
 def showSeasons():
-    """Display html dashboard page showing a list of registered seasons."""
+    """Handler showing a list of registered seasons."""
     seasons = db_helper.get_all_seasons()
     return render_template('seasons.html', seasons=seasons)
 
 
 @app.route('/season/new/', methods=['GET', 'POST'])
 def addSeason():
-    """Display html dashboard page to register a new season."""
+    """Handler to register a new season."""
     if not current_user.is_authenticated():
         flash("Login is required to access this page")
         return redirect(redirect_url())
@@ -146,8 +142,7 @@ def addSeason():
 
 @app.route('/season/<season_id>/edit/', methods=['GET', 'POST'])
 def editSeason(season_id):
-    """Display html dashboard page to edit an already registered season
-    Argument:   season id"""
+    """Handler to edit an already registered season"""
     if not current_user.is_authenticated():
         flash("Login is required to access this page")
         return redirect(redirect_url())
@@ -162,10 +157,8 @@ def editSeason(season_id):
 
 @app.route('/season/<season_id>/delete/', methods=['GET', 'POST'])
 def deleteSeasonConfirmation(season_id):
-    """Display html dashboard sub-page confirming deletion an existing
-    season. Care must be taken as that will orphan regattas and remove
-    rowers from teams from that particular season.
-    args:   season_id"""
+    """Handler to confirming deletion an existing
+    season."""
     if not current_user.is_authenticated():
         flash("Login is required to access this page")
         return redirect(redirect_url())
@@ -180,7 +173,7 @@ def deleteSeasonConfirmation(season_id):
 
 @app.route('/regattas/')
 def showRegattas():
-    """Display html page showing regattas for all registered seasons"""
+    """Handler to display all regattas for all registered seasons"""
     seasons = db_helper.get_all_seasons()
     regattas = db_helper.get_all_regattas()
     return render_template('regattas.html', seasons=seasons, regattas=regattas)
@@ -188,15 +181,14 @@ def showRegattas():
 
 @app.route('/regatta/<regatta_id>/')
 def showRegatta(regatta_id):
-    """Display html page showing detailed regatta information.
-    args: regatta id"""
+    """Handler for page showing regatta profile."""
     regatta = db_helper.get_regatta_from_regatta_id(regatta_id)
     return render_template('regatta.html', regatta=regatta)
 
 
 @app.route('/regatta/new/', methods=['GET', 'POST'])
 def addRegatta():
-    """Display html dashboard page to add a new regatta."""
+    """Hander for page to add a new regatta."""
     if not current_user.is_authenticated():
         flash("Login is required to access this page")
         return redirect(redirect_url())
@@ -211,8 +203,7 @@ def addRegatta():
 
 @app.route('/regatta/<regatta_id>/edit/', methods=['GET', 'POST'])
 def editRegatta(regatta_id):
-    """Display html dashboard page to edit an existing regatta.
-    argument:   regatta id"""
+    """Handler for page to edit an existing regatta."""
     if not current_user.is_authenticated():
         flash("Login is required to access this page")
         return redirect(redirect_url())
@@ -229,10 +220,7 @@ def editRegatta(regatta_id):
 
 @app.route('/regatta/<regatta_id>/delete/', methods=['GET', 'POST'])
 def deleteRegattaConfirmation(regatta_id):
-    """Display html dashboard sub-page to confirm deletion an existing
-    regatta.  Use care as deleting a regatta will remove that regatta
-    form list of regatta's rowed for each rower.
-    argument regatta id"""
+    """Handler to confirm deletion an existing regatta."""
     if not current_user.is_authenticated():
         flash("Login is required to delete a regatta")
         return redirect(redirect_url())
@@ -247,7 +235,7 @@ def deleteRegattaConfirmation(regatta_id):
 
 @app.route('/rower/<rower_id>/')
 def showRower(rower_id):
-    """Display detailed rower information for given rower ID."""
+    """Handler to display rower profile"""
     rower = db_helper.get_rower_from_rower_id(rower_id)
     current_season = db_helper.get_current_season()
     current_team = db_helper.get_current_season_teams_for_rower_id(rower_id)
@@ -258,7 +246,7 @@ def showRower(rower_id):
 
 @app.route('/rower/<rower_id>/edit/', methods=['GET', 'POST'])
 def editRower(rower_id):
-    """Display html dashboard page to edit an existing rower."""
+    """Handler to edit existing rower profile"""
     if not current_user.is_authenticated():
         flash("Login is required to access this page")
         return redirect(redirect_url())
@@ -273,7 +261,8 @@ def editRower(rower_id):
         seasons = db_helper.get_all_seasons()
         regattas = db_helper.get_all_regattas()
         current_season = db_helper.get_current_season()
-        current_team = db_helper.get_current_season_teams_for_rower_id(rower_id=rower_id)
+        current_team = db_helper.get_current_season_teams_for_rower_id(
+                                                            rower_id=rower_id)
         return render_template('editrower.html', rower=rower,
                                rowedregattas=rowed_regattas,
                                seasons=seasons,
@@ -284,12 +273,11 @@ def editRower(rower_id):
 
 @app.route('/rower/new/', methods=['GET', 'POST'])
 def addRower():
-    """Display html dashboard page to add a new rower to DB"""
+    """Handler to add a new rower to DB"""
     if not current_user.is_authenticated():
         flash("Login required to access this page")
         return redirect(redirect_url())
     current_season = db_helper.get_current_season()
-    print current_season.name
     if request.method == 'POST':
         # a bit of a kluge...  adds new rower to db and returns
         # the rower team ID... I could not get it to return the
@@ -312,7 +300,7 @@ def addRower():
 
 @app.route('/rower/<rower_id>/delete/', methods=['GET', 'POST'])
 def deleteRowerConfirmation(rower_id):
-    """Display html dashboard sub-page confirming deletion of a rower."""
+    """Handler to confirm deletion of a rower."""
     if not current_user.is_authenticated():
         flash("Login required to delete rower")
         return redirect(redirect_url())
@@ -396,11 +384,14 @@ def download_rowers():
     for row in rows:
         writer.writerow(
             dict(
-                (k, v.encode('utf-8') if type(v) is unicode else v) for k, v in row.iteritems()
+                (k, v.encode('utf-8') if type(v) is unicode
+                    else v) for k, v in row.iteritems()
             )
         )
     csvfile.seek(0)
-    return send_file(csvfile, attachment_filename='rowers.csv', as_attachment=True)
+    return send_file(csvfile,
+                     attachment_filename='rowers.csv',
+                     as_attachment=True)
 
 
 @app.route('/regattas/download')
@@ -436,13 +427,14 @@ def download_regattas():
     for row in rows:
         writer.writerow(
             dict(
-                (k, v.encode('utf-8') if type(v) is unicode else v) for k, v in row.iteritems()
+                (k, v.encode('utf-8') if type(v) is unicode
+                    else v) for k, v in row.iteritems()
             )
         )
     csvfile.seek(0)
-    return send_file(csvfile, attachment_filename='regattas.csv', as_attachment=True)
-
-
+    return send_file(csvfile,
+                     attachment_filename='regattas.csv',
+                     as_attachment=True)
 
 
 if __name__ == '__main__':

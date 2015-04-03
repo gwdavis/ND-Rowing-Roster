@@ -1,10 +1,8 @@
 from sqlalchemy import create_engine  # , desc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Regattas, Seasons, Rowers, Teams,\
-                           RowerRegattas, RowerTeams, Base, User
+from database_setup import Regattas, Seasons, Rowers, Teams, Base, User
 
 import os
-import sys
 
 
 # Below used to format date fileds in forms
@@ -18,7 +16,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# Set up for Flask receipt of files from HTML form
+# Set up for Flask upload of image files from HTML form
 # see http://flask.pocoo.org/docs/0.10/patterns/fileuploads/#uploading-files
 # see generalized path (i.e. dir_path) using module __file__ directory at:
 # http://www.karoltomala.com/blog/?p=622
@@ -28,13 +26,12 @@ dir_path = os.path.dirname(path)
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 
-# Temporary manual plug to select the applicable season.
+# Following is a temporary manual plug to select the applicable season.
 # A later version will allow the selection of the season to display
 # teams, regattas and possibly results.
 currentseason = {'season_id': 1}
 
 
-# checks if uploaded photo files have an acceptable extension
 def allowed_file(filename):
     """Check if uploaded file has allowed extensions
     args:   filename"""
@@ -86,7 +83,6 @@ def get_rower_from_rower_id(rower_id):
 def get_all_rowers():
     """Get rower object for a given rower ID."""
     return session.query(Rowers).order_by(Rowers.lname.asc()).all()
-
 
 
 def get_list_rowed_regattas(rower_id):
@@ -204,7 +200,6 @@ def remove_regatta(regatta_id):
 
 def add_new_rower(form, files, image_folder):
     """Add new rower in DB and return team ID"""
-    print image_folder
     new_rower = Rowers(fname=form['fname'],
                        lname=form['lname'],
                        photo=get_avatar(rower=None,
@@ -257,7 +252,7 @@ def remove_rower(rower_id):
     return
 
 
-# Methods of updating rower
+# Helper Methods for updating rower
 
 
 def get_avatar(rower, files, image_folder):
@@ -313,11 +308,9 @@ def update_regattas_for_rower(rower, new_rowed_regattas):
     for rr in rower.regatta:
         existing_rowed_regattas.append(rr.id)
         if rr.id not in new_rowed_regattas:
-            print 'remove %s' % rr.name
             rower.regatta.remove(rr)
     for nr in set(new_rowed_regattas).difference(existing_rowed_regattas):
         add_regatta_to_rower(rower, nr)
-    print new_rowed_regattas
     return
 
 
@@ -344,3 +337,15 @@ def remove_season_from_rower(rower, season_id):
 
 def get_user_id(id):
     return session.query(User).get(int(id))
+
+
+def get_user_for_social_ID(social_id):
+    user = session.query(User).filter_by(social_id=social_id).first()
+    return user
+
+
+def add_new_user(social_id, username, email):
+    user = User(social_id=social_id, nickname=username, email=email)
+    session.add(user)
+    session.commit()
+    return
