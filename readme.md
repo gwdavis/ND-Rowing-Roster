@@ -1,12 +1,13 @@
 # Rowing Roster v0.1 
 ###a Udacity Nano-Degree Project for Full Stack Foundations
 
-March 2015 by Gary Davis
+April 2015 by Gary Davis
 
 ###Description:
 Rowing Roster provides team rosters, rowing profiles, regatta schedules and a record of regatta attendance.  The program was developed as part of a Udacity Full-Stack Nano-Degree program to explore database object relational mapping ("ORM"), "CRUD" (create, read, update, delete), RESTful design, OAuth login and some light styling.  
 
 ###Requirements:
+* virtualenv or a virtual machine
 * See in file requirements.txt
 
 For the Udacity Nano-Degree class, we installed a virtual machine using VirtualBox and Vagrant and pulled the necessary setup from GIT (see: https://www.udacity.com/wiki/ud197/install-vagrant)
@@ -20,11 +21,12 @@ For the Udacity Nano-Degree class, we installed a virtual machine using VirtualB
 |database_setup.py		|Database model
 |database_populate.py 	|Sets up dummy database content
 
-###Installation (on a Mac OS)
+###Installation (on a Mac OS with Vagrant installed)
 * Open Terminal on the Mac (it is found in the utilities folder or use Spotlight to search for it)
-* Change the directory from home to the vagrant directory installed on the Mac.  This can be done with:
+* Change the directory from home to the vagrant directory installed on the Mac and install Rowing Roster from Github.  This can be done with:
 ```ShellSession
-> cd [path to get to:]vagrant/rowing 
+> cd [path to get to:]vagrant
+> git clone https://github.com/gwdavis/ND-Rowing-Roster.git
 ```
 * Fire up the virtual machine: 
 ```ShellSession 
@@ -35,19 +37,61 @@ For the Udacity Nano-Degree class, we installed a virtual machine using VirtualB
 > vagrant SSH  
 ```
   You should now see the command line of the virtual machine
+ * Change directories to ND-Rowing_Roster and install requirements:
 
+ ```ShellSession
+ > pip intall -r requirements.txt
+ ```
+
+###Installation (on a Mac OS with Vitrualenv)
+* Open Terminal on the Mac (it is found in the utilities folder or use Spotlight to search for it)
+* Change the directory from home to the vagrant directory installed on the Mac and install Rowing Roster from Github.  This can be done with:
+```ShellSession
+> cd [path to get to where you wish to install the rowing roster directory:]
+> git clone https://github.com/gwdavis/ND-Rowing-Roster.git
+> cd ND-Rowing-Roster
+```
+Note - If you want to change the name of the directory, now is the time to do it before you set up your virutal environment
+* Install virtualenv if not already installed: 
+```ShellSession 
+> pip install virtualenv
+```  
+
+* Set up virtualenv in the rowing roster directory (make sure you are in the ND-Rowing_Roster or the renamed directory).  You can use any name for the virtualenv directory but venv will do:
+```ShellSession
+> virtualenv venv
+```
+* Activate the enviroment with the following command. It can be deactived with "deactivate""
+```ShellSession
+> source: venv/bin/activate
+```
+* Install requirements:
+```ShellSession
+> pip install -r requirements.txt
+```
+* One more thing...  the last line of app.py is set up for Vagrant.
+```python
+app.run(host='0.0.0.0', port=5000)
+```
+You can edit it to remove host='0.0.0.0', or be aware that other computers on your network can access the website by using your machines IP address/5000.  Alternatively, on a Mac, if you firewall is up, your machine should ask if you ant python to accept incoming connections, simply "Deny".
+
+###Setting up Facebook Credentials for OAuth
+* Check out Miguel Grinberg's detailed description [here](http://blog.miguelgrinberg.com/post/oauth-authentication-with-flask)
+> To create a Facebook app you can visit https://developer.facebook.com. Select "Add a New App" from the Apps dropdown, and make the type "WWW/Website". Then enter a name and category for your app. Once the application is created, go to the "App Configuration" section and set the URL of the application, which in the case of you running it on your own computer will be http://localhost:5000.
+
+* in app.py in the variable app.config['OAUTH_CREDENTIALS'], add the id and secret key you obtained from Facebook.
 
 ###Running the program
 
 * From the command line of the virtual machine, change directory to that of the program files:
 ```ShellSession
-> cd [path to get to:]/vagrant/rowing
+> cd [path to get to:]/ND-Rowing-Roster
 > python app.py
 ```
 
 * Alternatively, you can set up the dummy database first:
 ```ShellSession
-> cd [path to get to:]/vagrant/rowing
+> cd [path to get to:]/ND-Rowing-Roster
 > python database_setup.py
 > python database_populate.py
 > python app.py
