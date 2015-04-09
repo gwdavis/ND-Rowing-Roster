@@ -125,6 +125,7 @@ In addition to Udacity materials, I found the following information helpful:
 * list difference - http://stackoverflow.com/questions/9335773/python-list-difference
 * Oauth - https://github.com/miguelgrinberg/flask-oauth-example
 * Styling - http://getbootstrap.com/getting-started/
+* CSRF: http://flask-wtf.readthedocs.org/en/latest/csrf.html
 
 
 

@@ -23,6 +23,7 @@
       </div>
       <h3>Personal info</h3>
       <form class="form-compact" role="form" action="{{ url_for('deleteRowerConfirmation', rower_id=rower.id)}}" method = 'POST'>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <div class="form-group">
           <label class="col-lg-3 control-label">First name:</label>
           <div class="col-lg-8">

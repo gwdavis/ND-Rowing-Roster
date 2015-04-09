@@ -4,6 +4,7 @@
 <h2>Delete Existing Season:<br><small> {{season.name}}</small></h2>
 
 <form class="form-horizontal" action="{{ url_for('deleteSeasonConfirmation', season_id=season.id)}}" method = 'post'>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
   <div class='form-group'>
     <label for="inputName" class="control-label col-xs-2">Season Name:</label>
     <div class="col-xs-10">
