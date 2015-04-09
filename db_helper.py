@@ -309,8 +309,9 @@ def update_regattas_for_rower(rower, new_rowed_regattas):
     existing_rowed_regattas = []
     for rr in rower.regatta:
         existing_rowed_regattas.append(rr.id)
-        if rr.id not in new_rowed_regattas:
-            rower.regatta.remove(rr)
+    for r in existing_rowed_regattas:
+        if r not in new_rowed_regattas:
+            rower.regatta.remove(get_regatta_from_regatta_id(r))
     for nr in set(new_rowed_regattas).difference(existing_rowed_regattas):
         add_regatta_to_rower(rower, nr)
     return
