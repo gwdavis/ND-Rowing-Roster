@@ -3,7 +3,7 @@
 # Run 'sudo pip install -r requirements.txt' to install these dependencies
 
 cffi==0.9.2
-cryptography==3.2
+cryptography==3.3.2
 enum34==1.0.4
 Flask==1.0
 Flask-Login==0.2.11
